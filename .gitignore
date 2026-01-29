@@ -113,3 +113,15 @@ yarn-error.log
 /dist
 /build
 .vscode/
+
+# From landing/.gitignore
+/landing/dist
+/landing/dist-ssr
+/landing/*.local
+!/landing/.vscode/extensions.json
+/landing/.idea
+/landing/*.suo
+/landing/*.ntvs*
+/landing/*.njsproj
+/landing/*.sln
+/landing/*.sw?
