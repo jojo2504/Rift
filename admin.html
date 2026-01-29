@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rift | Admin Validation</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: #f0f2f5; }
+        header { background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; font-size: 1.5em; font-weight: bold; }
+        main { padding: 20px; }
+        h2 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+        .challenge-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .challenge-card .info { flex-grow: 1; }
+        .challenge-card .info h3 { margin: 0 0 5px 0; }
+        .challenge-card .info a { color: #007bff; text-decoration: none; }
+        .challenge-card .actions button { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin-left: 10px; }
+        .challenge-card .actions .validate { background-color: #28a745; color: white; }
+        .challenge-card .actions .refuse { background-color: #dc3545; color: white; }
+        .status { font-weight: bold; padding: 5px 10px; border-radius: 5px; color: white; }
+        .status.validated { background-color: #17a2b8; }
+        .status.refused { background-color: #6c757d; }
+    </style>
+</head>
+<body>
+
+    <header>Rift - Admin Validation</header>
+
+    <main>
+        <h2>Awaiting Validation</h2>
+        <div id="awaiting-validation-list"></div>
+
+        <h2>Processed</h2>
+        <div id="processed-list"></div>
+    </main>
+
+    <script>
+        const awaitingList = document.getElementById('awaiting-validation-list');
+        const processedList = document.getElementById('processed-list');
+
+        async function handleAction(defiId, action) {
+            try {
+                const response = await fetch(`/admin/${action}/${defiId}`, { method: 'POST' });
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Failed to perform action');
+                }
+                // Refresh list after action
+                fetchAndRenderChallenges();
+            } catch (error) {
+                console.error(`Error during ${action}:`, error);
+                alert(`Could not ${action} challenge: ${error.message}`);
+            }
+        }
+
+        function renderChallenges(challenges) {
+            awaitingList.innerHTML = '';
+            processedList.innerHTML = '';
+
+            for (const [id, challenge] of Object.entries(challenges)) {
+                const card = document.createElement('div');
+                card.className = 'challenge-card';
+                card.id = `challenge-${id}`;
+
+                if (challenge.status === 'awaiting_validation') {
+                    card.innerHTML = `
+                        <div class="info">
+                            <h3>${challenge.title}</h3>
+                            <a href="${challenge.replayUrl}" target="_blank">View Clip</a>
+                        </div>
+                        <div class="actions">
+                            <button class="validate" onclick="handleAction('${id}', 'validate')">Validate ✅</button>
+                            <button class="refuse" onclick="handleAction('${id}', 'refuse')">Refuse ❌</button>
+                        </div>
+                    `;
+                    awaitingList.appendChild(card);
+                } else if (challenge.status === 'validated' || challenge.status === 'refused') {
+                    card.innerHTML = `
+                        <div class="info">
+                            <h3>${challenge.title}</h3>
+                        </div>
+                        <div class="status ${challenge.status}">${challenge.status.toUpperCase()}</div>
+                    `;
+                    processedList.appendChild(card);
+                }
+                // 'active' challenges are not displayed on this page
+            }
+             if (awaitingList.innerHTML === '') {
+                awaitingList.innerHTML = '<p>No challenges are currently awaiting validation.</p>';
+            }
+            if (processedList.innerHTML === '') {
+                processedList.innerHTML = '<p>No challenges have been processed yet.</p>';
+            }
+        }
+
+        async function fetchAndRenderChallenges() {
+            try {
+                const response = await fetch('/admin/challenges');
+                const challenges = await response.json();
+                renderChallenges(challenges);
+            } catch (error) {
+                console.error('Error fetching challenges:', error);
+                awaitingList.innerHTML = '<p style="color: red;">Could not load challenges. Is the server running?</p>';
+            }
+        }
+
+        // Initial load
+        fetchAndRenderChallenges();
+    </script>
+
+</body>
+</html>

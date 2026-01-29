@@ -1,0 +1,31 @@
+{
+  "name": "rift",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jojo2504/Rift.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jojo2504/Rift/issues"
+  },
+  "homepage": "https://github.com/jojo2504/Rift#readme",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "kaspajs": "^2.0.1",
+    "qrcode": "^1.5.4",
+    "tmi.js": "^1.8.5",
+    "ws": "^8.19.0"
+  }
+}
