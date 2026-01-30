@@ -1,0 +1,2342 @@
+### Start Kaspa Mainnet Node
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to start a Kaspa mainnet node using `kaspad`. The first command starts a basic node, while the second enables the UTXO index, which is required for wallet functionality.
+
+```bash
+cargo run --release --bin kaspad
+```
+
+```bash
+cargo run --release --bin kaspad -- --utxoindex
+```
+
+--------------------------------
+
+### Kaspa Node Configuration File Example
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+An example TOML-like configuration for the Kaspa node, demonstrating how to set various parameters such as network type, UTXO index, UPnP, performance metrics, application directory, network suffix, and peer addresses.
+
+```toml
+testnet = true
+utxoindex = false
+disable-upnp = true
+perf-metrics = true
+appdir = "some-dir"
+netsuffix = 11
+addpeer = ["10.0.0.1", "1.2.3.4"]
+```
+
+--------------------------------
+
+### Run Kaspa Node with Configuration File
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to start the Kaspa node (`kaspad`) using a specified configuration file. The configuration file allows for persistent settings, including network parameters, UTXO index, and peer connections.
+
+```bash
+cargo run --release --bin kaspad -- --configfile /path/to/configfile.toml
+```
+
+```bash
+cargo run --release --bin kaspad -- -C /path/to/configfile.toml
+```
+
+--------------------------------
+
+### Start Kaspa Testnet Node
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Command to start a Kaspa node configured for the testnet. This is useful for development and testing purposes without interacting with the main Kaspa network.
+
+```bash
+cargo run --release --bin kaspad -- --testnet
+```
+
+--------------------------------
+
+### Launch Kaspa Node with UTXO Indexing
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+This command starts the Kaspa node daemon ('kaspad') and enables UTXO indexing, which is required for certain wallet functionalities and efficient block processing. Keep this process running for your node to stay active on the network.
+
+```bash
+kaspad --utxoindex
+```
+
+--------------------------------
+
+### Display Simpa Simulation Framework Help
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Shows all available command-line arguments and options for the Simpa network simulation framework, aiding in understanding its usage.
+
+```bash
+cargo run --release --bin simpa -- --help
+```
+
+--------------------------------
+
+### Serve Local Web Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to set up and run a local HTTP server for the Kaspa WebAssembly (WASM) web wallet. It navigates to the wallet directory, installs `basic-http-server` if not present, and then starts the server, typically on port 4000.
+
+```bash
+cd wallet/wasm/web
+cargo install basic-http-server
+basic-http-server
+```
+
+--------------------------------
+
+### Install Prerequisites and Build rusty-kaspa on Linux
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+This section outlines the necessary steps to set up the development environment for rusty-kaspa on Linux. It includes installing system packages, Protobuf, clang toolchain, Rust, wasm-pack, and adding the wasm32 target, followed by cloning the repository.
+
+```bash
+sudo apt install curl git build-essential libssl-dev pkg-config
+```
+
+```bash
+sudo apt install protobuf-compiler libprotobuf-dev
+```
+
+```bash
+sudo apt-get install clang-format clang-tidy \
+clang-tools clang clangd libc++-dev \
+libc++1 libc++abi-dev libc++abi1 \
+libclang-dev libclang1 liblldb-dev \
+libllvm-ocaml-dev libomp-dev libomp5 \
+lld lldb llvm-dev llvm-runtime \
+llvm python3-clang
+```
+
+```bash
+cargo install wasm-pack
+```
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+```bash
+git clone https://github.com/kaspanet/rusty-kaspa
+cd rusty-kaspa
+```
+
+--------------------------------
+
+### Build and Run Kaspa Node.js RPC Example
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This sequence of commands shows how to prepare the `kaspa-wasm` project, install Node.js dependencies, initialize local configuration, and execute a JavaScript RPC example. It assumes building from source and requires `npm` and `node` to be installed.
+
+```bash
+cd wasm
+./build-release
+cd examples
+npm install
+node init
+node nodejs/javascript/general/rpc.js
+```
+
+--------------------------------
+
+### Install and Run Local HTTP Server for Web Examples
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This snippet demonstrates how to install a simple HTTP server using `cargo` and run it to serve web examples. A local server is required because WASM32 modules cannot be loaded directly via the `file://` protocol due to security restrictions.
+
+```bash
+cargo install http-server
+http-server
+```
+
+--------------------------------
+
+### Install Prerequisites and Build rusty-kaspa on Windows
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+This section details the installation process for rusty-kaspa on Windows, covering Git, Protocol Buffers, LLVM, Rust toolchain, wasm-pack, and the wasm32 target. It also provides important notes regarding LLVM configuration for WASM and native C++ compilation.
+
+```bash
+cargo install wasm-pack
+```
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+```bash
+git clone https://github.com/kaspanet/rusty-kaspa
+cd rusty-kaspa
+```
+
+--------------------------------
+
+### Install Project Dependencies with npm
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/nodejs/typescript/README.md
+
+Before running any TypeScript examples, it is crucial to install all necessary project dependencies. This command uses npm to fetch and install all packages listed in the project's package.json file, ensuring a functional environment for development and execution.
+
+```Bash
+npm install
+```
+
+--------------------------------
+
+### Install Prerequisites and Build rusty-kaspa on macOS
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+This section provides instructions for setting up rusty-kaspa on macOS, including installing Protobuf, LLVM (with specific notes for WASM build targets), Rust toolchain, wasm-pack, and the wasm32 target. It also covers environment variable configuration for LLVM.
+
+```bash
+brew install protobuf
+```
+
+```bash
+brew install llvm
+```
+
+```bash
+brew list llvm
+```
+
+```bash
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+```
+
+```bash
+export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+```
+
+```bash
+export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+```
+
+```bash
+export AR=/opt/homebrew/opt/llvm/bin/llvm-ar
+```
+
+```bash
+source ~/.zshrc
+```
+
+```bash
+cargo install wasm-pack
+```
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+```bash
+git clone https://github.com/kaspanet/rusty-kaspa
+cd rusty-kaspa
+```
+
+--------------------------------
+
+### Run Kaspa CLI and Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Navigate to the `cli` directory and run the Kaspa command-line interface (CLI) and wallet in release mode. This provides a CLI-driven RPC interface and a terminal interface to the Rusty Kaspa Wallet runtime.
+
+```bash
+cd cli
+cargo run --release
+```
+
+--------------------------------
+
+### Run Unit and Integration Tests with Cargo
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Navigates to the `rusty-kaspa` directory and executes all unit and most integration tests using the standard `cargo test` command. This ensures the core functionality of the project is working as expected.
+
+```bash
+cd rusty-kaspa
+cargo test --release
+```
+
+--------------------------------
+
+### Enable and Run Heap Profiling for Kaspad
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Runs the `kaspad` binary with the `heap` feature enabled, which activates heap profiling. This command generates a `{bin-name}-heap.json` file in the work directory, suitable for inspection with `dhat-viewer`.
+
+```bash
+cargo run --bin kaspad --profile heap --features=heap
+```
+
+--------------------------------
+
+### Run Performance Benchmarks with Cargo
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Navigates to the `rusty-kaspa` directory and executes the project's defined performance benchmarks using `cargo bench`. This helps in measuring and tracking the performance characteristics of critical code paths.
+
+```bash
+cd rusty-kaspa
+cargo bench
+```
+
+--------------------------------
+
+### Configure Kaspad Logging via Command-Line Argument
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Runs the `kaspad` binary and sets specific log levels for various modules (e.g., `info` for general, `trace` for RPC, GRPC, consensus, and core). The output is then piped to `tee` to both display on console and save to a log file.
+
+```bash
+(cargo run --bin kaspad -- --loglevel info,kaspa_rpc_core=trace,kaspa_grpc_core=trace,consensus=trace,kaspa_core=trace) 2>&1 | tee ~/rusty-kaspa.log
+```
+
+--------------------------------
+
+### Kaspa Node (kaspad) Advanced Command-Line Options
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Documentation for advanced command-line arguments available for the `kaspad` daemon, allowing for custom RPC configurations, performance metrics, logging adjustments, and memory cache scaling.
+
+```APIDOC
+--rpclisten=0.0.0.0: Listen for RPC connections on all network interfaces (public RPC).
+--rpclisten-borsh: Enable local borsh RPC access for `kaspa-cli`.
+--unsaferpc: Allow P2P peer query and management via RPC (use with caution if not exposing RPC publicly).
+--perf-metrics --loglevel=info,kaspad_lib::daemon=debug,kaspa_mining::monitor=debug: Enable detailed performance logs.
+--loglevel=kaspa_grpc_server=warn: Suppress most RPC connect/disconnect log reports.
+--ram-scale=3.0: Increase cache size threefold (relevant for large RAM; range 0.1 to 10).
+```
+
+--------------------------------
+
+### Run TypeScript Examples using ts-node
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/nodejs/typescript/README.md
+
+This method allows for direct execution of TypeScript files without a separate compilation step. It requires global installation of both TypeScript and ts-node. The command then uses ts-node to run a specific TypeScript file, making it ideal for rapid prototyping and testing.
+
+```Bash
+npm install -g typescript
+npm install -g ts-node
+ts-node src/version
+```
+
+--------------------------------
+
+### Display Kaspa Node Command-Line Arguments
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Command to display all available command-line arguments and options for the Kaspa node (`kaspad`). This is useful for understanding and configuring the node's behavior.
+
+```bash
+cargo run --release --bin kaspad -- --help
+```
+
+--------------------------------
+
+### Run Tests with Cargo Nextest
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Navigates to the `rusty-kaspa` directory and executes tests using `cargo nextest`. This alternative test runner can provide faster test execution times compared to the default `cargo test`.
+
+```bash
+cd rusty-kaspa
+cargo nextest run --release
+```
+
+--------------------------------
+
+### Launch Kaspa Node from Source Code
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+If you are running 'kaspad' from a local build, use this command to compile and execute the daemon in release mode. The '--utxoindex' flag ensures that the node builds and maintains the UTXO set for efficient transaction lookups.
+
+```bash
+cargo run --bin kaspad --release -- --utxoindex
+```
+
+--------------------------------
+
+### Build WASM SDK Components
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to build various configurations of the Rusty Kaspa WebAssembly (WASM) SDK, including release, development, web, and Node.js targets. These scripts compile Rust code into WebAssembly modules and generate documentation.
+
+```bash
+./build-release
+```
+
+```bash
+./build-docs
+```
+
+```bash
+./build-web
+```
+
+```bash
+./build-web-dev
+```
+
+```bash
+./build-nodejs
+```
+
+```bash
+./build-nodejs-dev
+```
+
+--------------------------------
+
+### Compile and Run TypeScript Examples with tsc and Node.js
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/nodejs/typescript/README.md
+
+This approach involves first compiling TypeScript files into JavaScript using the TypeScript compiler (tsc), and then executing the resulting JavaScript files with Node.js. This is a standard workflow for production deployments, ensuring that the code is compiled before execution. It requires global installation of TypeScript.
+
+```Bash
+npm install -g typescript
+tsc
+node lib/version
+```
+
+--------------------------------
+
+### Start Kaspa Testnet 10 CPU Mining
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Initiates CPU mining on Testnet 10 using `kaspa-miner`. The `--testnet` flag ensures connection to the test network, `--mining-address` specifies the recipient address for rewards, and `-p` sets the port. The `-t` flag defines the number of threads to use for mining.
+
+```Shell
+kaspa-miner --testnet --mining-address <your-address> -p 16210 -t 1
+```
+
+--------------------------------
+
+### Connect to Kaspa Network and Get Server Info (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/get-server-info.html
+
+This JavaScript snippet demonstrates the process of initializing the Kaspa RPC client, connecting to a specified network, fetching server information, and then gracefully disconnecting. It showcases the basic usage of the `RpcClient` and `Resolver` classes.
+
+```JavaScript
+import { log, stringify, currentNetwork } from './resources/utils.js';
+import * as kaspa from '../../web/kaspa-rpc/kaspa.js';
+
+let { Resolver, RpcClient, Encoding } = kaspa;
+
+(async () => {
+  await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
+
+  let networkId = currentNetwork();
+  log(`Connecting to Kaspa network...`);
+  log(`Selected network is ${networkId}...`);
+
+  const rpc = new RpcClient({
+    resolver : new Resolver(),
+    networkId,
+  });
+
+  await rpc.connect();
+  log("Connected to", rpc.url);
+
+  log("GetServerInfo request...");
+  const info = await rpc.getServerInfo();
+  log("GetServerInfo response:", info);
+
+  log("Disconnected...");
+  await rpc.disconnect();
+})();
+```
+
+--------------------------------
+
+### Execute Code Lints for Rusty-Kaspa
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Navigates to the `rusty-kaspa` directory and runs the project's custom linting script. This script checks for code style, quality, and potential issues, helping maintain code consistency and standards.
+
+```bash
+cd rusty-kaspa
+./check
+```
+
+--------------------------------
+
+### Enable Kaspa wRPC JSON Protocol
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to enable the wRPC subsystem for the Kaspa node using the JSON protocol. It allows specifying a custom interface and port or using default settings for the current network.
+
+```bash
+--rpclisten-json = <interface:port>
+```
+
+```bash
+--rpclisten-json = default
+```
+
+--------------------------------
+
+### Kaspa Node Advanced Command-Line Options
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+This section details various command-line arguments available for 'kaspad' to customize network behavior, RPC interfaces, logging verbosity, and performance parameters. These options allow fine-tuning of node operation for specific use cases like pool operations or debugging.
+
+```APIDOC
+--disable-upnp: Disables Universal Plug and Play (UPnP) for automatic public connectivity. Recommended for pool operators and exchanges to manage network exposure manually.
+--rpclisten=0.0.0.0: Configures the RPC server to listen on all available network interfaces, making it publicly accessible. Use with caution.
+--rpclisten=127.0.0.1: Configures the RPC server to listen only on the local loopback interface, restricting access to applications running on the same machine (e.g., local pool software).
+--rpclisten-borsh: Enables a local Borsh-encoded RPC interface, primarily used by the 'kaspa-cli' binary for efficient local communication.
+--unsaferpc: Activates unsafe RPC methods that allow P2P peer query and management. This option should only be used if the RPC interface is not exposed publicly due to security implications.
+--perf-metrics --loglevel=info,kaspad_lib::daemon=debug,kaspa_mining::monitor=debug: Enables detailed performance metrics and sets specific log levels for various components to aid in debugging and performance analysis.
+--loglevel=kaspa_grpc_server=warn: Adjusts the log level for the GRPC server to 'warn', suppressing most routine connection and disconnection messages to reduce log verbosity.
+--ram-scale=3.0: Increases the node's cache size by a specified factor (e.g., 3.0 for threefold increase). This parameter is relevant for nodes with large amounts of RAM and can improve performance, with values ranging from 0.1 to 10.
+```
+
+--------------------------------
+
+### Launch Kaspa Node on Testnet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+To connect your Kaspa node to the testnet instead of the mainnet, append the '--testnet' flag to your 'kaspad' launch command. This is useful for development and testing purposes without affecting the main network.
+
+```bash
+kaspad --utxoindex --testnet
+```
+
+--------------------------------
+
+### Initialize Kaspa Modules and Network Connection
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/browser-extension.html
+
+This JavaScript snippet initializes the Kaspa WebAssembly module and imports core utilities like `Resolver`, `RpcClient`, and `kaspaToSompi`. It then determines the current network ID and logs connection status, preparing the environment for Kaspa operations.
+
+```JavaScript
+import { log, stringify, currentNetwork } from './resources/utils.js';
+import * as kaspa from '../../web/kaspa/kaspa.js';
+let { Resolver, RpcClient, Encoding, kaspaToSompi } = kaspa;
+(async () => {
+  await kaspa.default('../../web/kaspa/kaspa_bg.wasm');
+  let networkId = currentNetwork();
+  log(`Connecting to Kaspa network...`);
+  log(`Selected network is ${networkId}...`);
+```
+
+--------------------------------
+
+### Build and Run Rusty Kaspa WASM Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/README.md
+
+These commands guide the user through building the web assets for the WASM wallet and then starting a local HTTP server. The WASM wallet interface becomes accessible via `http://localhost:4000` in a web browser.
+
+```Shell
+cd wasm
+./build-web
+cd web
+basic-http-server
+```
+
+--------------------------------
+
+### Example: Kaspa RPC Client Connection and BlockDagInfo Retrieval
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/browser-extension.html
+
+This commented JavaScript code demonstrates how to establish a connection to a Kaspa RPC server using `RpcClient`. It illustrates the process of connecting, requesting block DAG information (`getBlockDagInfo`), and disconnecting from the RPC endpoint. This serves as a reference for direct RPC interactions.
+
+```JavaScript
+// const rpc = new RpcClient({
+// resolver : new Resolver(),
+// networkId,
+// });
+// await rpc.connect();
+// log("Connected to", rpc.url);
+// log("GetBlockDagInfo request...");
+// const info = await rpc.getBlockDagInfo();
+// log("GetBlockDagInfo response:", info);
+// log("Disconnected...");
+// await rpc.disconnect();
+```
+
+--------------------------------
+
+### Launch Kaspa Testnet 10 Node (kaspad)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Launches the Kaspa daemon (`kaspad`) configured for Testnet 10. The `--testnet` flag enables testnet mode, `--netsuffix=10` specifies TN10, and `--utxoindex` enables the UTXO index for wallet functionality. This command should be left running to keep the node active.
+
+```Shell
+kaspad --testnet --netsuffix=10 --utxoindex
+```
+
+--------------------------------
+
+### Launch Kaspa Testnet 10 Node from Source (Rust)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Runs the Kaspa daemon (`kaspad`) directly from the Rust source code. This is useful for developers or those building from the `master` branch. It uses the same Testnet 10 configuration flags as the pre-compiled binary.
+
+```Shell
+cargo run --bin kaspad --release -- --testnet --netsuffix=10 --utxoindex
+```
+
+--------------------------------
+
+### Enable Kaspa wRPC Borsh Protocol
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Commands to enable the wRPC subsystem for the Kaspa node using the Borsh protocol. It allows specifying a custom interface and port or using default settings for the current network.
+
+```bash
+--rpclisten-borsh = <interface:port>
+```
+
+```bash
+--rpclisten-borsh = default
+```
+
+--------------------------------
+
+### Run Simpa Network Simulation with Custom Parameters
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/README.md
+
+Executes a Simpa network simulation to generate 1000 blocks. It configures a communication delay of 2 seconds, a block rate of 8 blocks per second, and attempts to fill each block with up to 200 transactions.
+
+```bash
+cargo run --release --bin simpa -- -t=200 -d=2 -b=8 -n=1000
+```
+
+--------------------------------
+
+### Create Kaspa Wallet with Rothschild
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Initializes a new Kaspa wallet using the `rothschild` utility. This command generates a private key and a corresponding public address, which can then be funded for transaction generation.
+
+```Shell
+rothschild
+```
+
+--------------------------------
+
+### Dynamic UI for Kaspa Wallet Connection
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/browser-extension/index.html
+
+This JavaScript snippet dynamically creates and appends HTML elements to the document body, setting up a user interface for wallet interaction. It includes a 'Connect wallet' button, a container for displaying discovered wallets, and an input field for specifying payment amounts.
+
+```javascript
+const $ = q=>document.querySelector(q);
+let el = document.createElement("div");
+document.body.appendChild(el);
+el.innerHTML = ` <button id="connect" class="link">Connect wallet</button> <div id="wallets"></div> <br>&nbsp;<br> <br/><input id="amount" class="amount" type="text" value="" placeholder=" Enter amount to request payment..." /> <br>&nbsp;<br> <button id="request" class="link">Request payment</button> <br>&nbsp;<br> `;
+```
+
+--------------------------------
+
+### Connect to Selected Kaspa Wallet API
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/browser-extension/index.html
+
+This JavaScript snippet handles click events on the list of discovered wallets. It identifies the selected wallet by its UUID, retrieves its details, and attempts to establish a connection to the wallet's API using `wallet.api.connect()`, logging the connection result to the console.
+
+```javascript
+let wallets = $("#wallets");
+wallets.addEventListener("click", async (e) => {
+  e.preventDefault();
+  let uuid = e.target.closest(".wallet").dataset.uuid;
+  let wallets = discover_kaspa_wallet();
+  let wallet = wallets.find(w=>w.uuid == uuid)
+  console.log("wallet", uuid, wallet)
+  if (!wallet?.api) return
+  let result = await wallet.api.connect();
+  console.log("wallet.api.connect result", result)
+  // let input = document.getElementById("amount");
+  // let amount = input.value;
+  // //let sompi = kaspaToSompi(amount);
+  // // TODO ... request payment
+  // input.value = "";
+  // Kaspa.send({address: "xxxx", amount:13.4});
+});
+```
+
+--------------------------------
+
+### Update Golang Kaspad SDK Dependency for Crescendo
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+Users leveraging the golang Kaspad repository as an SDK for their pool or stratum software must update their dependency. A new tag, 'v0.12.20', has been released specifically to include the necessary changes for Crescendo hardfork compatibility.
+
+```APIDOC
+Recommended SDK version: https://github.com/kaspanet/kaspad/releases/tag/v0.12.20
+```
+
+--------------------------------
+
+### Discover and Display Available Kaspa Wallets
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/browser-extension/index.html
+
+This JavaScript code attaches an event listener to the 'Connect wallet' button. Upon activation, it uses `discover_kaspa_wallet()` to find available wallets and then dynamically populates a designated UI area with each wallet's name, icon, and a unique identifier, enabling user selection.
+
+```javascript
+let connect = $("#connect");
+connect.addEventListener("click", async (e) => {
+  e.preventDefault();
+  let list = $("#wallets");
+  let temp = $("#wallet-tpl");
+  let wallets = discover_kaspa_wallet();
+  wallets.forEach(w=>{
+    console.log("wallet", w)
+    let wallet = temp.content.cloneNode(true);
+    wallet.querySelector(".title").innerHTML = w.name;
+    wallet.querySelector(".icon").src = w.icon;
+    wallet.querySelector(".wallet").dataset.uuid = w.uuid;
+    list.appendChild(wallet);
+  })
+  if (wallets.length){
+    connect.disabled = true
+  }
+});
+```
+
+--------------------------------
+
+### Install basic-http-server
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/README.md
+
+This command installs the `basic-http-server` utility, which is a prerequisite for serving the WASM wallet's web interface locally. It allows access to the web application through a browser.
+
+```Shell
+cargo install basic-http-server
+```
+
+--------------------------------
+
+### Build Kaspa WASM SDK Documentation
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This snippet provides commands to install `typedoc` globally and then execute the `build-docs` script to generate documentation for the Kaspa WASM SDK. It notes that a Rust environment is required as the process involves building the WASM32 SDK first.
+
+```bash
+npm install -g typedoc
+./build-docs
+```
+
+--------------------------------
+
+### Import Kaspa WASM SDK and Get Version in Node.js
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/npm/README.md
+
+This snippet demonstrates how to import the Kaspa WASM SDK in a Node.js environment using `require` and then retrieve its version. This requires the `kaspa` NPM module to be installed and available.
+
+```javascript
+const kaspa = require('kaspa');
+console.log(kaspa.version());
+```
+
+--------------------------------
+
+### Dynamically Generate HTML for Wallet Connection Interface
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/browser-extension.html
+
+This JavaScript code dynamically creates and appends a `div` element to the document body. It populates this `div` with HTML for a 'Connect wallet' button, a container for discovered wallets, an input field for payment amounts, and a 'Request payment' button, setting up the basic user interface.
+
+```JavaScript
+const $ = q=>document.querySelector(q);
+let el = document.createElement("div");
+document.body.appendChild(el);
+el.innerHTML = ` <button id="connect" class="link">Connect wallet</button> <div id="wallets"></div> <br>&nbsp;<br> <br/><input id="amount" class="amount" type="text" value="" placeholder=" Enter amount to request payment..." /> <br>&nbsp;<br> <div id="request" class="link">Request payment</div> <br>&nbsp;<br> `;
+```
+
+--------------------------------
+
+### Connect to Kaspa Network and Get Block DAG Info (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/get-block-dag-info.html
+
+This JavaScript snippet initializes the Kaspa RPC client, connects to a specified network, fetches block DAG information, logs the response, and then disconnects. It uses the `kaspa-rpc` library and requires a WASM module for operation.
+
+```JavaScript
+import { log, stringify, currentNetwork } from './resources/utils.js'; import * as kaspa from '../../web/kaspa-rpc/kaspa.js'; let { Resolver, RpcClient, Encoding } = kaspa; (async () => { await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm'); let networkId = currentNetwork(); log(`Connecting to Kaspa network...`); log(`Selected network is ${networkId}...`); const rpc = new RpcClient({ resolver : new Resolver(), networkId, }); await rpc.connect(); log("Connected to", rpc.url); log("GetBlockDagInfo request..."); const info = await rpc.getBlockDagInfo(); log("GetBlockDagInfo response:", info); log("Disconnected..."); await rpc.disconnect(); })();
+```
+
+--------------------------------
+
+### Handle Wallet Selection and API Connection
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/browser-extension.html
+
+This event listener on the wallets container handles clicks on individual wallet entries. It extracts the wallet's UUID, finds the corresponding wallet object, and attempts to connect to its API using `wallet.api.connect()`. The snippet also contains commented-out placeholder logic for initiating a payment request.
+
+```JavaScript
+let wallets = $("#wallets");
+wallets.addEventListener("click", async (e) => {
+  e.preventDefault();
+  let uuid = e.target.closest(".wallet")?.dataset?.uuid;
+  if (!uuid) return
+  let wallets = discover_kaspa_wallet();
+  let wallet = wallets.find(w=>w.uuid == uuid)
+  console.log("wallet", uuid, wallet)
+  if (!wallet?.api) return
+  let result = await wallet.api.connect();
+  console.log("wallet.api.connect result", result)
+  // let input = document.getElementById("amount");
+  // let amount = input.value;
+  // //let sompi = kaspaToSompi(amount);
+  // // TODO ... request payment
+  // input.value = "";
+  // // Kaspa.send({address: "xxxx", amount:13.4});
+});
+```
+
+--------------------------------
+
+### Kaspa RPC Client Connection and BlockDagInfo Retrieval (Commented)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/browser-extension/index.html
+
+This commented-out JavaScript code demonstrates how to connect to a Kaspa RPC client, retrieve block DAG information, and disconnect. It utilizes `RpcClient` and `Resolver` from a `kaspa` library, showing a basic interaction pattern with the Kaspa network.
+
+```javascript
+// import { log, stringify, currentNetwork } from './resources/utils.js';
+// import * as kaspa from '../../web/kaspa/kaspa.js';
+// let { Resolver, RpcClient, Encoding, kaspaToSompi } = kaspa;
+// (async () => {
+// await kaspa.default('../../web/kaspa/kaspa_bg.wasm');
+// let networkId = currentNetwork();
+// log(`Connecting to Kaspa network...`);
+// log(`Selected network is ${networkId}...`);
+// const rpc = new RpcClient({
+// resolver : new Resolver(),
+// networkId,
+// });
+// await rpc.connect();
+// log("Connected to", rpc.url);
+// log("GetBlockDagInfo request...");
+// const info = await rpc.getBlockDagInfo();
+// log("GetBlockDagInfo response:", info);
+// log("Disconnected...");
+// await rpc.disconnect();
+```
+
+--------------------------------
+
+### Build Rusty Kaspa WASM32 SDK from Source
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+Commands to build different versions of the Rusty Kaspa WASM32 SDK, including release, web, Node.js, and documentation builds. These commands require a Rust environment and TypeDoc installed globally for documentation generation.
+
+```Shell
+./build-release
+```
+
+```Shell
+./build-web
+```
+
+```Shell
+./build-node
+```
+
+```Shell
+./build-docs
+```
+
+--------------------------------
+
+### Redirect to Web Example Page (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/index.html
+
+This JavaScript code snippet redirects the current browser window to the 'examples/web/index.html' page. It is typically used for initial page loading or navigation within a web application.
+
+```JavaScript
+window.location.replace("examples/web/index.html");
+```
+
+--------------------------------
+
+### Handle 'Connect Wallet' Button Click for Wallet Discovery
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/browser-extension.html
+
+This event listener for the 'Connect wallet' button triggers the `discover_kaspa_wallet()` function. It then iterates through the discovered wallets, clones a template (`#wallet-tpl`), populates it with wallet details (name, icon, UUID), and appends it to the UI. The button is disabled if any wallets are found.
+
+```JavaScript
+let connect = $("#connect");
+connect.addEventListener("click", async (e) => {
+  e.preventDefault();
+  let list = $("#wallets");
+  let temp = $("#wallet-tpl");
+  let wallets = discover_kaspa_wallet();
+  wallets.forEach(w=>{
+    console.log("wallet", w)
+    let wallet = temp.content.cloneNode(true);
+    wallet.querySelector(".title").innerHTML = w.name;
+    wallet.querySelector(".icon").src = w.icon;
+    wallet.querySelector(".wallet").dataset.uuid = w.uuid;
+    list.appendChild(wallet);
+  })
+  if (wallets.length){
+    connect.disabled = true
+  }
+});
+```
+
+--------------------------------
+
+### Update GRPC Proto Files for Crescendo Compatibility
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+To ensure compatibility with the Crescendo hardfork, mining pools and stratum software must update their GRPC proto files. Obtain the latest 'message.proto' and 'rpc.proto' from the official rusty-kaspa repository to correctly handle the new 'mass' field in transactions.
+
+```APIDOC
+Source for updated proto files: https://github.com/kaspanet/rusty-kaspa/tree/master/rpc/grpc/core/proto
+```
+
+--------------------------------
+
+### JavaScript Local File Protocol Check for HTTP Server Requirement
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/index.html
+
+Checks if the current page is accessed via the 'file:' protocol. If true, it replaces the document's body content with instructions on how to serve the examples over HTTP or HTTPS using Python's http.server or Rust's http-server, ensuring proper execution of web-based examples.
+
+```JavaScript
+if (location.protocol === 'file:') { document.body.innerHTML = \` These examples must be served over HTTP or HTTPS. <p>Try running <code>python3 -m http.server</code> and navigating to <a href=\"http://localhost:8000/index.html\">http://localhost:8000/</a></p> <p>If using Rust, install http server by running: <code>cargo install http-server</code>,<br> then run <code>http-server</code> and navigate to <a href=\"http://localhost:7878/index.html\">http://localhost:7878/</a></p> <p>Make sure to run HTTP server from the root of the <code>kaspa-wasm32-sdk</code> folder.</p> \`; }
+```
+
+--------------------------------
+
+### Broadcast Kaspa Transactions with Rothschild
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/testnet10-transition.md
+
+Broadcasts transactions using the `rothschild` utility with a specified private key. The `-t` flag controls the transaction rate in transactions per second (TPS), allowing users to simulate network load.
+
+```Shell
+rothschild --private-key <your-private-key> -t=10
+```
+
+--------------------------------
+
+### Load Kaspa WASM SDK in Web Application
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This HTML snippet demonstrates how to asynchronously load the Kaspa WASM SDK (`kaspa-wasm.js` and `kaspa-wasm_bg.wasm`) into a web browser using ES6 modules. It initializes the WASM module and logs its version, providing a basic setup for web-based applications.
+
+```html
+<html>
+    <head>
+        <script type="module">
+            import * as kaspa from './kaspa/kaspa-wasm.js';
+            (async () => {
+                await kaspa.default('./kaspa/kaspa-wasm_bg.wasm');
+                console.log(kaspa.version());
+                // ...
+            })();
+        </script>
+    </head>
+    <body></body>
+</html>
+```
+
+--------------------------------
+
+### Connect and Use Kaspa RpcClient in Node.js
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This JavaScript example demonstrates how to instantiate and use the `RpcClient` to connect to a Kaspa node, retrieve network information, and then properly disconnect. It configures the client with a URL, encoding type, and network, showcasing a typical RPC interaction flow.
+
+```javascript
+// if port is not specified, it will use the default port for the specified network
+const rpc = new RpcClient({
+    url: "127.0.0.1", 
+    encoding: Encoding.Borsh, 
+    network : "testnet-10"
+});
+
+(async () => {
+    try {
+        await rpc.connect();
+        let info = await rpc.getInfo();
+        console.log(info);
+    } finally {
+        await rpc.disconnect();
+    }
+})();
+```
+
+--------------------------------
+
+### Initialize FeerateEstimator and Test time_to_feerate in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet demonstrates the basic initialization of a `FeerateEstimator` object. It sets `total_weight` to zero and defines an `inclusion_interval`. The `time_to_feerate` method is then called with a feerate of 1, likely to test its fundamental behavior or to get an initial estimate.
+
+```python
+estimator = FeerateEstimator(total_weight=0, inclusion_interval=1/100)
+# estimator.quantile(2, 3, 0.5)
+estimator.time_to_feerate(1)
+```
+
+--------------------------------
+
+### Kaspa Node Warning: Invalid Transaction Mass (Pre-Crescendo)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/crescendo-guide.md
+
+This warning message indicates that a submitted block contains a transaction with an incorrect 'mass' value, suggesting that the miner's RPC conversion flow is not preserving the 'mass' field from 'GetBlockTemplate'. This warning will become an error after the Crescendo hardfork, leading to invalid blocks if not addressed.
+
+```APIDOC
+The RPC submitted block {block_has} contains a transaction {tx_hash} with mass = 0 while it should have been strictly positive.
+This indicates that the RPC conversion flow used by the miner does not preserve the mass values received from GetBlockTemplate.
+You must upgrade your miner flow to propagate the mass field correctly prior to the Crescendo hardfork activation. 
+Failure to do so will result in your blocks being considered invalid when Crescendo activates.
+```
+
+--------------------------------
+
+### Compounded Subscription VirtualSelectedParentChainChanged Event Handling
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Pseudo-code illustrating the internal process and return logic for various mutations (Add All, Add Reduced, Remove Reduced, Remove All) related to the VirtualSelectedParentChainChanged subscription. This logic manages 'All' and 'Reduced' counters to determine when to send start or stop event messages.
+
+```pseudo-code
+Process: Increment `All`
+Return: If `All` == 1
+   Some(SubscribeMessage::StartEvent(NotificationType::VirtualSelectedParentChainChanged(true)))
+Else
+   None
+```
+
+```pseudo-code
+Process: Increment `Reduced`
+Return: If `Reduced` == 1 and `All` == 0
+   Some(SubscribeMessage::StartEvent(NotificationType::VirtualSelectedParentChainChanged(false)))
+Else
+   None
+```
+
+```pseudo-code
+Process: Decrement `Reduced`
+Return: If `Reduced` == 0 and `All` == 0
+   Some(SubscribeMessage::StopEvent(NotificationType::VirtualSelectedParentChainChanged(false)))
+Else
+   None
+```
+
+```pseudo-code
+Process: Decrement `All`
+Return: If `All` == 0
+   If `Reduced` > 0
+      Some(SubscribeMessage::StartEvent(NotificationType::VirtualSelectedParentChainChanged(false)))
+   Else
+      Some(SubscribeMessage::StopEvent(NotificationType::VirtualSelectedParentChainChanged(true)))
+Else
+   None
+```
+
+--------------------------------
+
+### Kaspa UTXO Processor Web Demo Implementation
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/utxo-context.html
+
+This comprehensive JavaScript snippet demonstrates the full workflow of a web-based Kaspa UTXO monitor. It covers importing necessary modules, initializing the WASM core, connecting to the Kaspa network via an RPC client, setting up a `UtxoProcessor` to track address events, and handling user input to add addresses for monitoring or restart the processor. It highlights event-driven updates and basic UI integration.
+
+```javascript
+import { log, stringify, currentNetwork } from './resources/utils.js';
+import * as kaspa from '../../web/kaspa-core/kaspa.js';
+
+let { Resolver, RpcClient, Encoding, UtxoProcessor, UtxoContext } = kaspa;
+
+window.monitor = {};
+
+(async () => {
+  await kaspa.default('../../web/kaspa-core/kaspa_bg.wasm');
+
+  let network = currentNetwork();
+  log(`Connecting to Kaspa network...`);
+  log(`Selected network is ${network.class("network")}...`);
+
+  const resolver = new Resolver();
+  // let url = resolver.getUrl(Encoding.Borsh, "mainnet")
+  const rpc = await resolver.connect(network);
+  // const rpc = new RpcClient({ url, networkId: "mainnet" });
+  log("Connected to", rpc.url.class("network"));
+
+  // const privateKey = new PrivateKey('b99d75736a0fd0ae2da658959813d680474f5a740a9c970a7da867141596178f');
+  // const address = privateKey.toKeypair().toAddress(networkId);
+
+  // ---
+  let { monitor } = window;
+  monitor.processor = new UtxoProcessor({ rpc, networkId : network });
+  await monitor.processor.start();
+
+  let context = new UtxoContext({ processor : monitor.processor });
+
+  let events = 0;
+  monitor.processor.addEventListener((event) => {
+    document.getElementById("actions").innerHTML = `| Received ${events} event(s)`;
+    // log("event:", JSON.stringify(event,null,2));
+    log("event:", event);
+    events += 1;
+  });
+
+  // kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp
+  // kaspa:qzeln8eue9nnrz85kn7x47smxhfqudyz6urv2wpquuvslq7ck4umys8gkt5x8
+
+  log("");
+  log("Please note that some addresses may have thousands of UTXOs which makes it");
+  log("impractical for the browser to display as a list. This type of data output");
+  log("should be paginated.");
+  log("");
+  log("This demo is meant for manual testing to demonstrate events emitted by the");
+  log("UtxoProcessor, your browser may have difficulty rendering large sets of UTXOs.");
+
+  let el = document.createElement("div");
+  document.body.appendChild(el);
+  el.innerHTML = ` <br/><input id="address" class="address" type="text" value="" placeholder=" Enter ${network} address..." /> <br>&nbsp;<br> <div id="submit" class="link">Click to monitor address</div> <br>&nbsp;<br> <div id="restart" class="link">Restart</div> <br>&nbsp;<br> `;
+
+  // let input = document.getElementById("address");
+  let submit = document.getElementById("submit");
+  submit.addEventListener("click", async (e) => {
+    e.preventDefault();
+    let input = document.getElementById("address");
+    let address = input.value;
+    log("Tracking address:", address);
+    try {
+      await context.trackAddresses([address]);
+    } catch (e) {
+      log("Error:", e);
+    }
+    input.value = "";
+  });
+
+  let restart = document.getElementById("restart");
+  restart.addEventListener("click", async (e) => {
+    log("Restarting...");
+    log("Stopping processor...");
+    await context.clear();
+    await monitor.processor.stop();
+    log("Starting processor...");
+    await monitor.processor.start();
+    log("Processor started...");
+  });
+})();
+```
+
+--------------------------------
+
+### JavaScript Kaspa WASM SDK Initialization
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/index.html
+
+Imports the Kaspa SDK from a local path and asynchronously initializes its WASM module. After initialization, it logs the SDK object and its version to the console, and updates a specific DOM element with the current SDK version, confirming successful loading.
+
+```JavaScript
+import * as kaspa from '../../web/kaspa-core/kaspa.js';
+(async () => {
+  await kaspa.default('../../web/kaspa-core/kaspa_bg.wasm');
+  console.log(\"kaspa\", kaspa);
+  console.log(\"version\", kaspa.version());
+  document.getElementById(\"version\").innerText = kaspa.version();
+})();
+```
+
+--------------------------------
+
+### JavaScript Dynamic WASM Package Listing and Documentation Links
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/index.html
+
+Dynamically generates a list of available WASM32 SDK packages, including their names, descriptions, and links to their respective documentation. It checks for a global 'packageSizes' object to display package sizes if available, providing a comprehensive overview of the SDK components.
+
+```JavaScript
+if (!window.packageSizes) { window.packageSizes = {}; } let el = document.getElementById(\"packages\"); Object.entries({ \"kaspa-keygen\": [\"KeyGen\",\"Key & Address Generation only\"], \"kaspa-rpc\": [\"RPC\",\"RPC only\"], \"kaspa-core\": [\"Core\",\"RPC + Key & Address Generation + Wallet SDK\"], \"kaspa\": [\"SDK\",\"Full SDK + Integrated Wallet\"] }).forEach(([ident,[name,descr]]) => { let size = packageSizes[ident] ? \`${packageSizes[ident]}\` : \"\"; el.innerHTML += \`<li>WASM32 ${name} Package ${" ".repeat(6-name.length)}${size} - ${descr} - <a href=\"../../docs/${ident}/index.html\" target=\"_blank\">Docs</a></li>\`; });
+```
+
+--------------------------------
+
+### Initialize Kaspa RPC Client and Log Version (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/rpc/wrpc/wasm/web/index.html
+
+This JavaScript snippet demonstrates how to initialize the Kaspa RPC client by importing its module and loading the WebAssembly file. After successful initialization, it logs the current version of the Kaspa RPC client to the console. This is typically the first step to interact with the Kaspa network via RPC.
+
+```javascript
+import * as kaspa from './kaspa-rpc/kaspa-rpc.js';
+(async () => {
+  await kaspa.default('./kaspa-rpc/kaspa-rpc_bg.wasm');
+  console.log(kaspa.version());
+})();
+```
+
+--------------------------------
+
+### Initialize Kaspa Wallet WASM Module with JavaScript
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/wasm/web/index.html
+
+This JavaScript snippet imports the Kaspa Wallet module, loads its WebAssembly binary, and initializes the command-line interface. It's typically used for setting up the wallet's core functionality in a web environment, ensuring the WASM module is ready for use.
+
+```JavaScript
+import * as kaspa from './kaspa-wallet/kaspa-wallet.js';
+(async () => {
+  const wasm = await kaspa.default('./kaspa-wallet/kaspa-wallet_bg.wasm');
+  await wasm.load_kaspa_wallet_cli();
+})();
+```
+
+--------------------------------
+
+### Run Rusty Kaspa Native Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/README.md
+
+These commands navigate to the native wallet directory and execute the Rust application. The native wallet provides a command-line interface for direct interaction and management of the wallet.
+
+```Shell
+cd native
+cargo run
+```
+
+--------------------------------
+
+### Create Rusty Kaspa Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command creates a new local wallet. An optional name can be provided; otherwise, 'kaspa' is used as the default. Multiple named wallets can be created, though typically one wallet with multiple accounts is sufficient.
+
+```CLI
+wallet create [<name>]
+```
+
+--------------------------------
+
+### Configure and Create Rusty Kaspa Wallet via CLI
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/README.md
+
+These commands are executed within the wallet's interactive shell (native or WASM) to configure the network type, specify the Kaspad node server address, establish a connection, and create a new wallet. A mnemonic phrase is provided upon creation for future recovery.
+
+```CLI
+network testnet
+server localhost
+connect
+create
+```
+
+--------------------------------
+
+### Configure Rusty Kaspa Server Connection
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+The 'server' command configures the target Rusty Kaspa node for the wallet to connect to. It allows connecting to any node with wRPC enabled or to the public node infrastructure by setting the server to 'public'.
+
+```CLI
+server
+```
+
+--------------------------------
+
+### Monitor Account Balances
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+The 'monitor' command initiates a test screen environment that periodically updates and displays the balances of your accounts. This provides a real-time view of your holdings without needing to manually refresh.
+
+```CLI
+monitor
+```
+
+--------------------------------
+
+### Open Rusty Kaspa Wallet
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+Use this command to open an existing wallet by its name. A wallet is automatically opened immediately after its creation, so this command is primarily for opening previously created wallets.
+
+```CLI
+open <name>
+```
+
+--------------------------------
+
+### Initialize Sample Feerates List
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet initializes a list of sample feerates, which are used to simulate transaction fees for testing or analysis purposes. The list contains various feerate values, some repeated to create a distribution.
+
+```python
+feerates = [1.0, 1.1, 1.2] + [1.1]*100 + [1.2]*100 + [1.3]*100  # + [3, 4, 5, 100]
+```
+
+--------------------------------
+
+### Defining Sample Feerate Data (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This Python snippet initializes a list named `feerates` with a synthetic dataset. This data simulates various feerate values, potentially for testing or demonstrating feerate distribution and estimation algorithms.
+
+```python
+feerates = [1.0, 1.1, 1.2]*10 + [1.5]*3000 + [2]*3000 + [2.1]*3000 + [3, 4, 5]*10
+```
+
+--------------------------------
+
+### Create BIP32 HD Wallet Account
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command allows the creation of additional Hierarchical Deterministic (HD) wallet accounts. These accounts are linked to the default private key of your main wallet, providing a structured way to manage multiple addresses.
+
+```CLI
+account create bip32 [<name>]
+```
+
+--------------------------------
+
+### Kaspa WASM SDK RPC Client API Reference
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This section provides an API reference for the `RpcClient` class and `Encoding` enum within the Kaspa WASM SDK. It details the constructor parameters for `RpcClient` and the available encoding options, which are crucial for interacting with the Kaspa network via RPC.
+
+```APIDOC
+RpcClient:
+  constructor(options: object)
+    url: string - The URL of the RPC server.
+    encoding: Encoding - The encoding to use for RPC messages.
+    network: string - The network to connect to (e.g., "testnet-10").
+  methods:
+    connect(): Promise<void> - Establishes a connection to the RPC server.
+    getInfo(): Promise<object> - Retrieves general information from the connected RPC server.
+    disconnect(): Promise<void> - Closes the connection to the RPC server.
+
+Encoding: enum
+  Borsh: string - Represents Borsh binary encoding.
+  Json: string - Represents JSON encoding.
+```
+
+--------------------------------
+
+### Initialize WebSocket Shim and Import Kaspa Modules in Node.js
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/README.md
+
+This JavaScript snippet shows how to optionally provide a W3C WebSocket shim for Node.js environments, which is necessary when building WASM libraries from source. It then imports core Kaspa modules like `RpcClient`, `Encoding`, and `initConsolePanicHook` for use in Node.js applications.
+
+```javascript
+//
+// W3C WebSocket module shim
+// this is provided by NPM `kaspa` module and is only needed
+// if you are building WASM libraries for NodeJS from source
+//
+// @ts-ignore
+// globalThis.WebSocket = require('websocket').w3cwebsocket;
+//
+
+let {
+    RpcClient,
+    Encoding,
+    initConsolePanicHook
+} = require('./kaspa');
+
+// enabling console panic hooks allows WASM to print panic details to console
+// initConsolePanicHook();
+// enabling browser panic hooks will create a full-page DIV with panic details
+// this is useful for mobile devices where console is not available
+// initBrowserPanicHook();
+```
+
+--------------------------------
+
+### Connect to Kaspa Network and Subscribe to Block Added Events (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/subscribe-block-added.html
+
+This JavaScript code demonstrates how to establish a connection to a Kaspa network using the `kaspa-rpc` library. It initializes an RPC client, handles connection and disconnection events, and subscribes to `block-added` events, logging block data to the console. It also shows how to load the necessary WASM32 SDK binaries.
+
+```JavaScript
+import { log, logToId, clearId, randomId, stringify, currentNetwork, disconnectHandler } from './resources/utils.js';
+// import WASM32 SDK
+import * as kaspa from '../../web/kaspa-rpc/kaspa.js';
+
+let { Resolver, RpcClient, Encoding } = kaspa;
+
+(async () => {
+  // load WASM32 SDK binaries
+  await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
+
+  let networkId = currentNetwork();
+  log(`Connecting to Kaspa network...`);
+  log(`Selected network is ${networkId.class("network")}...`);
+
+  const rpc = new RpcClient({
+    resolver : new Resolver(),
+    networkId
+  });
+
+  let id;
+
+  rpc.addEventListener("connect", async (event) => {
+    clearId(id);
+    id = randomId();
+    log("Connected to", rpc.url.class("network"));
+    log("Subscribing to Block Added...");
+    await rpc.subscribeBlockAdded();
+  });
+
+  rpc.addEventListener("disconnect", async (event) => {
+    log("Disconnected from", rpc.url.class("network"));
+    console.log("Disconnect",event);
+  });
+
+  rpc.addEventListener("block-added", async (event) => {
+    // remove parentsByLevel from header (reduce data output)
+    delete event.data.block.header.parentsByLevel;
+    logToId(id, event);
+  });
+
+  log("Connecting to public node...");
+  await rpc.connect();
+
+  disconnectHandler(rpc);
+})();
+```
+
+--------------------------------
+
+### Configure Rusty Kaspa Network
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command sets the default network for Rusty Kaspa operations. Users can choose between 'mainnet', 'testnet-10', and 'testnet-11'. For experimentation, 'testnet-11' is recommended as a safe environment.
+
+```CLI
+network testnet-11
+```
+
+--------------------------------
+
+### Apply Basic CSS Styles for Page Layout
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/wasm/web/index.html
+
+This CSS snippet provides fundamental styling for the 'body' element to remove default margins and padding, and defines dimensions for a '.terminal' class to fill the viewport with a small margin. It's useful for creating full-page applications or terminal-like interfaces.
+
+```CSS
+body { margin: 0; padding: 0; }
+.terminal { margin: 8px; width: calc(100vw - 16px); height: calc(100vh - 16px); }
+```
+
+--------------------------------
+
+### List Rusty Kaspa Wallet Accounts
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command displays all accounts within the currently open wallet, along with their respective balances. It provides a quick overview of your wallet's holdings across all managed accounts.
+
+```CLI
+list
+```
+
+--------------------------------
+
+### Generate Kaspa HD Wallet Keys and Addresses with WASM
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/xpub.html
+
+This JavaScript code demonstrates the full flow of generating HD wallet-style keys and deriving Kaspa addresses using the `kaspa_wasm.js` library. It covers initializing the WASM module, creating a mnemonic, generating an extended private key (XPrv), deriving an extended public key (XPub), and then generating multiple receive addresses from the XPub. It also includes a test for XPub string serialization and deserialization to ensure consistency.
+
+```JavaScript
+import * as kaspa from './kaspa/kaspa_wasm.js';
+let {PublicKeyGenerator, createAddress, NetworkType, Mnemonic, XPrv} = kaspa;
+window.XPublicKey = PublicKeyGenerator;
+
+(async () => {
+  const wasm = await kaspa.default('./kaspa/kaspa_wasm_bg.wasm');
+  console.log("kaspa", kaspa);
+  console.log("version", kaspa.version());
+  tests();
+})();
+
+async function tests(){
+  let seed = Mnemonic.random(12).toSeed();
+  const xPrv = new XPrv(seed).intoString("kprv");
+
+  // HD Wallet-style public key generation
+  let xpub = await PublicKeyGenerator.fromMasterXPrv(
+    xPrv,
+    false,
+    0n
+  );
+  console.log("xpub", xpub)
+  let xpub_str = xpub.toString();
+  console.log("xpub", xpub_str)
+
+  // Generates the first 10 Receive Public keys and their addresses
+  let compressedPublicKeys = await xpub.receivePubkeys(0, 10);
+  console.log("receive address compressedPublicKeys", compressedPublicKeys);
+  let addresses1 = compressedPublicKeys.map(key => createAddress(key, NetworkType.Mainnet).toString());
+  console.log("receive addresses", addresses1);
+
+  xpub = await PublicKeyGenerator.fromString(xpub_str);
+
+  // Generates the first 10 Receive Public keys and their addresses
+  compressedPublicKeys = await xpub.receivePubkeys(0, 10);
+  console.log("receive address compressedPublicKeys", compressedPublicKeys);
+  let addresses2 = compressedPublicKeys.map(key => createAddress(key, NetworkType.Mainnet).toString());
+  console.log("receive addresses", addresses2);
+
+  //addresses1[0] += "should fail";
+  if (!addresses2.length){
+    throw new Error("Address creation failed")
+  }else if (addresses2.find((address, index)=>addresses1[index]!=address)){
+    console.error("Xpub restore failed");
+  }else{
+    console.info("Xpub restore success");
+  }
+}
+```
+
+--------------------------------
+
+### Estimate Transaction Fees and UTXO Consumption
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command provides an estimate of the transaction fees and the number of Unspent Transaction Outputs (UTXOs) that will be consumed for a transaction of a given amount. It helps in planning transactions by showing potential costs.
+
+```CLI
+estimate <amount>
+```
+
+--------------------------------
+
+### Single UtxosChanged Subscription State Transitions
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Illustrates the resulting state and atomic mutations when a single UtxosChanged subscription undergoes a mutation, based on its current state. This table details the state transition logic.
+
+```APIDOC
+State         | Mutation: All    | Mutation: Add(A)   | Mutation: Remove(R)  | Mutation: None
+--------------|------------------|--------------------|----------------------|--------------
+None          | -
+              | + All
+              | ----------------
+              | All              | -
+              | + A
+              | ----------------
+              | Selected(A)      | -
+              | -
+              | ----------------
+              | None                 | -
+              | -
+              | ----------------
+              | None
+Selected(S)   | - S
+              | + All
+              | ----------------
+              | All              | -
+              | + (A – S)
+              | ----------------
+              | Selected(A ∪ S)  | -
+              | - (R ∩ S)
+              | ----------------
+              | Selected(S – R)      | -
+              | - S
+              | ----------------
+              | None
+All           | -
+              | -
+              | ----------------
+              | All              | + A
+              | - All
+              | ----------------
+              | Selected(A)      | -
+              | -
+              | ----------------
+              | All                  | -
+              | - All
+              | ----------------
+              | None
+```
+
+--------------------------------
+
+### Basic CSS Styling for Page Layout
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/index.html
+
+Defines fundamental CSS rules for the document body, links, and code elements. It sets margins, padding, font styles, and link colors, along with specific styling for list items and a fixed-position banner element.
+
+```CSS
+body { margin: 0px; padding: 32px; font-size: 16px; font-family: \"Consolas\", \"Andale Mono\", monospace; } a { color: rgb(0, 156, 117); text-decoration: none; } a:hover { color: rgb(8, 115, 88); } code { color: rgb(30, 94, 184); font-size: inherit; font-family: inherit; } li { white-space: pre; } .banner { opacity: 0.75; position:fixed; right: 32px; top: 32px; }
+```
+
+--------------------------------
+
+### Visualize Feerate Estimation Curve in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This code initializes a `FeerateEstimator` with dynamic parameters and calculates feerate estimations. It then generates a plot of the `feerate_to_time` function using `matplotlib` and `numpy`, highlighting the inclusion interval and scattering the predicted feerate points. This visualization helps in understanding how the estimator selects meaningful points on the curve.
+
+```python
+estimator = FeerateEstimator(total_weight=total_weight, 
+                             inclusion_interval=avg_mass/network_mass_rate)
+
+pred = estimator.calc_estimations()
+x = np.linspace(1, pred.priority_bucket.feerate, 100000)
+y = estimator.feerate_to_time(x)
+plt.figure()
+plt.plot(x, y)
+plt.fill_between(x, estimator.inclusion_interval, y2=y, alpha=0.5)
+plt.scatter(pred.feerates(), pred.times(), zorder=100)
+plt.show()
+pred
+```
+
+--------------------------------
+
+### Importing Libraries for Feerate Analysis (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet imports the necessary Python libraries, `numpy` for numerical operations and `matplotlib.pyplot` for plotting, which are commonly used in data analysis and visualization tasks related to feerate estimation.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+--------------------------------
+
+### Execute RPC Methods
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command allows users to execute Remote Procedure Call (RPC) methods directly against the connected Kaspa node. Note that not all RPC methods may be available or fully implemented through this interface.
+
+```CLI
+rpc
+```
+
+--------------------------------
+
+### List Account Transaction History
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command displays a list of previous transactions associated with the currently active account. It provides a concise overview of past financial activities, showing basic transaction details.
+
+```CLI
+history list
+```
+
+--------------------------------
+
+### Compounded UtxosChanged Subscription Add(All) Pseudo-code
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Describes the pseudo-code for processing and returning values when adding 'All' to a compounded UtxosChanged subscription. This outlines the internal logic for handling this specific mutation.
+
+```pseudo-code
+Increment the All counter
+```
+
+```pseudo-code
+If All == 1
+   Some(SubscribeMessage::StartEvent(NotificationType::UtxosChanged(empty)))
+Else
+   None
+```
+
+--------------------------------
+
+### Implement RPC GRPC Kaspad Request/Response Converters
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/rpc/core/src/api/Extending RpcApi.md
+
+Utilizes Rust macros `impl_into_kaspad_request!` and `impl_into_kaspad_response!` to automatically generate conversion logic between `kaspa_rpc_core` types and `rpc-grpc` Protocol Buffer message types for `SubmitBlock` operations, streamlining data mapping.
+
+```Rust
+impl_into_kaspad_request!(kaspa_rpc_core::SubmitBlockRequest, SubmitBlockRequestMessage, SubmitBlockRequest);
+impl_into_kaspad_response!(kaspa_rpc_core::SubmitBlockResponse, SubmitBlockResponseMessage, SubmitBlockResponse);
+```
+
+--------------------------------
+
+### Show Detailed Account Transaction History
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command provides extended information for previous transactions of the active account. It offers more in-depth details compared to the basic 'history list' command, useful for detailed analysis.
+
+```CLI
+history details
+```
+
+--------------------------------
+
+### Feerate Estimation Classes API
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This section defines the core classes for feerate estimation within the system. It includes `FeerateBucket` for storing feerate and estimated time pairs, `FeerateEstimations` for managing a collection of such buckets, and `FeerateEstimator` which provides methods to calculate feerate-to-time and time-to-feerate conversions, as well as quantile estimations based on mempool dynamics.
+
+```APIDOC
+class FeerateBucket:
+  __init__(self, feerate: float, estimated_seconds: float)
+    feerate: float - The transaction feerate.
+    estimated_seconds: float - The estimated time in seconds for inclusion.
+
+class FeerateEstimations:
+  __init__(self, low_bucket: FeerateBucket, mid_bucket: FeerateBucket, normal_bucket: FeerateBucket, priority_bucket: FeerateBucket)
+    low_bucket: FeerateBucket - Bucket for low priority transactions.
+    mid_bucket: FeerateBucket - Bucket for medium priority transactions.
+    normal_bucket: FeerateBucket - Bucket for normal priority transactions.
+    priority_bucket: FeerateBucket - Bucket for high priority transactions.
+  __repr__(self) -> str
+    Returns a string representation of the feerates and estimated times.
+  feerates(self) -> numpy.ndarray
+    Returns an array of feerate values from the buckets.
+  times(self) -> numpy.ndarray
+    Returns an array of estimated times from the buckets.
+
+class FeerateEstimator:
+  Description:
+    total_weight: The total probability weight of all current mempool ready transactions, i.e., Σ_{tx in mempool}(tx.fee/tx.mass)^ALPHA
+    inclusion_interval: The amortized time between transactions given the current transaction masses present in the mempool, i.e., the inverse of the transaction inclusion rate. For instance, if the average transaction mass is 2500 grams, the block mass limit is 500,000 and the network has 10 BPS, then this number would be 1/2000 seconds.
+  __init__(self, total_weight: float, inclusion_interval: float)
+    total_weight: float - The total probability weight of all current mempool ready transactions.
+    inclusion_interval: float - The amortized time between transactions.
+  feerate_to_time(self, feerate: float) -> float
+    Description: Feerate to time function: f(feerate) = inclusion_interval * (1/p(feerate)) where p(feerate) = feerate^ALPHA/(total_weight + feerate^ALPHA) represents the probability function for drawing `feerate` from the mempool in a single trial. The inverse 1/p is the expected number of trials until success (with repetition), thus multiplied by inclusion_interval it provides an approximation to the overall expected waiting time.
+    feerate: float - The feerate value.
+    Returns: float - The estimated time in seconds.
+  time_to_feerate(self, time: float) -> float
+    Description: The inverse function of `feerate_to_time`.
+    time: float - The estimated time in seconds.
+    Returns: float - The corresponding feerate.
+  feerate_to_time_antiderivative(self, feerate: float) -> float
+    Description: The antiderivative function of feerate_to_time excluding the constant shift `+ c1`.
+    feerate: float - The feerate value.
+    Returns: float - The antiderivative value.
+  quantile(self, lower: float, upper: float, frac: float) -> float
+    Description: Returns the feerate value for which the integral area is `frac` of the total area.
+    lower: float - The lower bound feerate.
+    upper: float - The upper bound feerate.
+    frac: float - The fraction of the total area (0.0 to 1.0).
+    Returns: float - The feerate value at the specified quantile.
+  calc_estimations(self) -> None
+    Description: Calculates feerate estimations. Chooses `high` such that it provides sub-second waiting time and `low` feerate such that it provides sub-hour waiting time and covers at least the 0.25 quantile.
+```
+
+--------------------------------
+
+### Calculate Current Average Transaction Mass (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This Python code demonstrates calculating the "current" average transaction mass. It simulates a mempool with a removal strategy to maintain a nearly constant size. The approach is shown to be highly influenced by unusual mass clusters, leading to inaccurate averages.
+
+```python
+# Create a long sequence of transaction masses with periods with highly unusual mass clusters
+N = 500_000
+seq = generate_seq(N, 50, 40)
+
+# Approach 1 - calculate the current average
+
+# Requires a removal strategy for having a meaningful "current"
+R = 0.8
+# At each time step, remove the first element with probability 1 - R
+removals = np.random.choice([0, 1], size=N, p=[R, 1 - R])
+# After const steps, remove with probability 1, so that we simulate a mempool with nearly const size
+removals[256:] = 1
+j = 0
+y = []
+for i in range(1, N+1):
+    y.append(np.sum(seq[j:i])/(i-j))
+    if removals[i-1] == 1:
+        j += 1
+
+x = np.arange(0, N)
+plt.figure()
+plt.plot(x, y)
+plt.show()
+```
+
+--------------------------------
+
+### Add SubmitBlock Messages to Kaspad Protobuf Payload
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/rpc/core/src/api/Extending RpcApi.md
+
+Adds the `SubmitBlockRequestMessage` and `SubmitBlockResponseMessage` as fields within the `KaspadRequest` and `KaspadResponse` payloads in the Protocol Buffers definitions, assigning unique field numbers to ensure proper serialization and deserialization.
+
+```APIDOC
+SubmitBlockRequestMessage submitBlockRequest = 1003;
+SubmitBlockResponseMessage submitBlockResponse = 1004;
+```
+
+--------------------------------
+
+### Generate Transaction Mass Sequence with Clusters (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This Python helper function creates a sequence of transaction masses, simulating periods with highly unusual mass clusters. It takes parameters for sequence length, cluster length, number of clusters, and mean/variance for both normal and cluster masses. This function is used to generate synthetic data for comparing average calculation approaches.
+
+```python
+"""
+Helper function for creating a long sequence of transaction masses with periods with highly unusual mass clusters
+N = sequence length
+M = length of each unusual cluster
+X = number of unusual clusters
+"""
+def generate_seq(N, M, X, mean=2036, var=100, mean_cluster=50000, var_cluster=10000):
+    seq = np.random.normal(loc=mean, scale=var, size=N)
+    clusters = np.random.normal(loc=mean_cluster, scale=var_cluster, size=X * M)
+    cluster_indices = np.random.choice(N - M, size=X, replace=False)
+    for i, idx in enumerate(cluster_indices):
+        seq[idx:idx+M] = clusters[i*M:(i+1)*M]
+    return seq
+```
+
+--------------------------------
+
+### Connect to Kaspa RPC and Subscribe to DAA Score Changes (JavaScript)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/wasm/examples/web/subscribe-daa-changed.html
+
+This JavaScript snippet initializes the Kaspa WASM32 SDK, establishes a connection to a Kaspa RPC node, and sets up event listeners for connection, disconnection, and virtual DAA score changes. It demonstrates how to subscribe to specific notifications.
+
+```javascript
+import { log, logToId, randomId, stringify, currentNetwork, disconnectHandler } from './resources/utils.js';
+// import WASM32 SDK
+import * as kaspa from '../../web/kaspa-rpc/kaspa.js';
+
+let { Resolver, RpcClient, Encoding } = kaspa;
+
+(async () => {
+    // load WASM32 SDK binaries
+    await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
+
+    // try {
+    let networkId = currentNetwork();
+    log(`Connecting to Kaspa network...`);
+    log(`Selected network is ${networkId.class("network")}...`);
+
+    const rpc = new RpcClient({
+        resolver : new Resolver(),
+        networkId,
+    });
+
+    let id;
+    log("Registering for DAA notifications...");
+    rpc.addEventListener("virtual-daa-score-changed", async (event) => {
+        logToId(id, event);
+    });
+
+    rpc.addEventListener("connect", async (event) => {
+        id = randomId();
+        log("Connected to", rpc.url.class("network"));
+        log("Subscribing to DAA score...");
+        await rpc.subscribeVirtualDaaScoreChanged();
+    });
+
+    rpc.addEventListener("disconnect", async (event) => {
+        log("Disconnected from", rpc.url.class("network"));
+        console.log("Disconnect",event);
+    });
+
+    log("Connecting to public node...");
+    await rpc.connect();
+    disconnectHandler(rpc);
+    // } catch (e) {
+    // log("Error:", e);
+    // }
+})();
+```
+
+--------------------------------
+
+### Transfer Funds Between Accounts
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command facilitates transferring a specified amount of KAS from the currently active account to another account within the same wallet. The target account can be identified by its name or a unique prefix.
+
+```CLI
+transfer <account-name> <amount>
+```
+
+--------------------------------
+
+### UtxosChanged Subscription API Definitions
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Defines the possible mutation types and states for the UtxosChanged subscription, outlining the conditions for each. These definitions describe the logical structure and behavior of the subscription system.
+
+```APIDOC
+Mutation:
+  All: mutation.active() = true && addresses empty
+  Add(A): mutation.active() = true && addresses = A
+  Remove(R): mutation.active() = false && addresses = R
+  None: mutation.active() = false && addresses empty
+```
+
+```APIDOC
+State:
+  None: subscription.active = false && subscription.addresses empty
+  Selected(S): subscription.active = true && subscription.addresses = S
+  All: subscription.active = true && subscription.addresses empty
+```
+
+--------------------------------
+
+### Select Active Rusty Kaspa Account
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command sets a specific account as active within the open wallet. The account can be identified by its full name or the first few letters of its name or ID for convenience.
+
+```CLI
+select <account-name>
+```
+
+--------------------------------
+
+### Sweep Account UTXOs
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+The 'sweep' command consolidates an account's UTXOs to reduce their overall size. This can improve transaction efficiency and potentially reduce future transaction fees by optimizing the UTXO set.
+
+```CLI
+sweep
+```
+
+--------------------------------
+
+### Calculate Feerate Estimations in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This code snippet calculates different feerate estimations (low, normal, mid, high) based on time-to-feerate conversions and quantile calculations. It returns a `FeerateEstimations` object containing `FeerateBucket` instances with estimated feerates and their corresponding times, representing a core part of the feerate estimation logic.
+
+```python
+low = max(self.time_to_feerate(3600.0), self.quantile(1.0, high, 0.25))
+        
+        # Choose `normal` feerate such that it provides sub-minute waiting time AND it covers (at least) the 0.66
+        # quantile between low and high
+        normal = max(self.time_to_feerate(60.0), self.quantile(low, high, 0.66))
+        
+        # Choose an additional point between normal and low
+        mid = max(self.time_to_feerate(1800.0), self.quantile(1.0, high, 0.5))
+        
+        return FeerateEstimations(
+            FeerateBucket(low, self.feerate_to_time(low)),
+            FeerateBucket(mid, self.feerate_to_time(mid)),
+            FeerateBucket(normal, self.feerate_to_time(normal)),
+            FeerateBucket(high, self.feerate_to_time(high)))
+```
+
+--------------------------------
+
+### Implement Outlier Handling Solution for Feerate Estimation in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This comprehensive snippet provides a solution for robustly handling outliers in feerate estimation. It defines a `build_estimator` function that iteratively adjusts the `total_weight` and `inclusion_interval` by considering the impact of high-feerate transactions. The process aims to find an estimator that yields lower prediction times by effectively 'removing' the influence of outliers. The resulting `feerate_to_time` function is then plotted to show the improved estimation.
+
+```python
+def build_estimator():
+    _feerates = [1.0]*10 + [1.1]*10 + [1.2]*10 + [1.5]*3000 + [2]*3000\
++ [2.1]*3000 + [3]*10 + [4]*10 + [5]*10 + [6] + [7] + [10] + [100] + [200]*200
+    _total_weight = sum(np.array(_feerates)**ALPHA)
+    _network_mass_rate = bps * block_mass_limit
+    estimator = FeerateEstimator(total_weight=_total_weight, 
+                                 inclusion_interval=avg_mass/_network_mass_rate)
+    
+    nr = _network_mass_rate
+    for i in range(len(_feerates)-1, -1, -1):
+        tw = sum(np.array(_feerates[:i])**ALPHA)
+        nr -= avg_mass
+        if nr <= 0:
+            print("net mass rate {}", nr)
+            break
+        e = FeerateEstimator(total_weight=tw, 
+                             inclusion_interval=avg_mass/nr)
+        if e.feerate_to_time(1.0) < estimator.feerate_to_time(1.0):
+            # print("removing {}".format(_feerates[i]))
+            estimator = e
+        else:
+            break
+        
+    return estimator
+
+estimator = build_estimator()
+pred = estimator.calc_estimations()
+x = np.linspace(1, pred.priority_bucket.feerate, 100000)
+y = estimator.feerate_to_time(x)
+plt.figure()
+plt.plot(x, y)
+plt.fill_between(x, estimator.inclusion_interval, y2=y, alpha=0.5)
+plt.scatter(pred.feerates(), pred.times(), zorder=100)
+plt.show()
+pred
+```
+
+--------------------------------
+
+### Define Network and Transaction Mass Parameters
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet sets various parameters related to transaction mass and network capacity. These values are crucial for calculating the network's overall transaction processing rate and subsequently the inclusion interval for transactions.
+
+```python
+avg_mass = 2000
+bps = 1
+block_mass_limit = 500_000
+network_mass_rate = bps * block_mass_limit
+```
+
+--------------------------------
+
+### Compounded UtxosChanged Subscription Add(A) Pseudo-code
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Describes the pseudo-code for processing and returning values when adding a set of addresses 'A' to a compounded UtxosChanged subscription. This details how individual addresses are managed within the compounded subscription.
+
+```pseudo-code
+For each a in A
+   inc counter of a
+   If counter == 1 add a to B
+```
+
+```pseudo-code
+If B is not empty and All == 0
+   Some(SubscribeMessage::StartEvent(NotificationType::UtxosChanged(B)))
+Else
+   None
+```
+
+--------------------------------
+
+### Display Active Account Address
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+This command shows the public address associated with the currently selected active account. This address is essential for receiving funds into your wallet.
+
+```CLI
+address
+```
+
+--------------------------------
+
+### Define RPC Core API Trait Methods for SubmitBlock
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/rpc/core/src/api/Extending RpcApi.md
+
+Defines two asynchronous methods within the `kaspa_rpc_core::api::RpcApi` trait for handling block submission: `submit_block` with detailed parameters and `submit_block_call` using a request message object. The first is typically implemented as a call to the second.
+
+```APIDOC
+async fn submit_block(&self, block: RpcBlock, allow_non_daa_blocks: bool) -> RpcResult<SubmitBlockResponse>;
+async fn submit_block_call(&self, request: SubmitBlockRequest) -> RpcResult<SubmitBlockResponse>;
+```
+
+--------------------------------
+
+### Test Decaying Average Adjustment to Long-Term Mean Change (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This Python code extends the decaying average calculation to observe how quickly it adjusts to a long-term increase in the mean transaction mass. It concatenates the original sequence with a period of higher mean values and plots the decaying average's response, demonstrating its ability to adapt over time.
+
+```python
+# Increase the mean in the long term and see how long it takes the decaying avg to fully adjust
+seq2 = np.concatenate((seq, np.repeat(4000, N // 2)))
+N2 = len(seq2)
+y = []
+avg = 2000
+for i in range(N2):
+    avg = avg * D + seq2[i] * (1 - D) 
+    y.append(avg)
+
+x = np.arange(0, N2)
+plt.figure()
+plt.plot(x, y)
+plt.yscale('log')
+plt.show()
+```
+
+--------------------------------
+
+### Toggle Terminal Event Mute
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+The 'mute' command toggles the display of internal framework events in the terminal. When mute is off, all events are shown; when on, specific events can be tracked using the 'track' command, useful for applications integrating with the platform.
+
+```CLI
+mute
+```
+
+--------------------------------
+
+### Send Funds to External Address
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/cli/src/modules/guide.txt
+
+Use this command to send a specified amount of KAS from the active account to an external Kaspa address. This is for transactions outside your wallet to other users or services.
+
+```CLI
+send <address> <amount>
+```
+
+--------------------------------
+
+### Compounded UtxosChanged Subscription Remove(All) Pseudo-code
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Describes the pseudo-code for processing and returning values when removing 'All' from a compounded UtxosChanged subscription. This details the complex logic for transitioning from 'All' to 'Selected' or 'None'.
+
+```pseudo-code
+Decrement the All counter
+```
+
+```pseudo-code
+If All == 0
+   Build S with every a in addresses having counter > 0
+   If S is not empty
+      Some(SubscribeMessage::StartEvent(NotificationType::UtxosChanged(S)))
+   Else
+      Some(SubscribeMessage::StopEvent(NotificationType::UtxosChanged(empty)))
+Else
+   None
+```
+
+--------------------------------
+
+### VirtualSelectedParentChainChanged Subscription API Definitions
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Defines the possible mutation types and states for the VirtualSelectedParentChainChanged subscription, outlining the conditions for each. These definitions describe the logical structure and behavior of this specific subscription type.
+
+```APIDOC
+Mutation:
+  All: mutation: active() = true && include_accepted_transaction_ids = true
+  Reduced: mutation: active() = true && include_accepted_transaction_ids = false
+  None (via reduced): mutation.active() = false && include_accepted_transaction_ids = false
+  None (via all): mutation.active() = false && include_accepted_transaction_ids = true
+```
+
+```APIDOC
+State:
+  None: subscription: active = false
+  Reduced: subscription: active = true && include_accepted_transaction_ids = false
+  All: subscription: active = true && include_accepted_transaction_ids = true
+```
+
+--------------------------------
+
+### Calculate Decaying Average Transaction Mass (Python)
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This Python code implements a decaying weight formula to calculate the average transaction mass. This approach learns the long-term average and is significantly less influenced by unusual mass clusters, showing only minor spikes. It provides a more robust average over time.
+
+```python
+N = 5_000_000
+seq = generate_seq(N, 50, 40)
+# Approach 2 - calculate a decaying average
+D = 0.99999
+y = []
+avg = 2000
+for i in range(N):
+    avg = avg * D + seq[i] * (1 - D) 
+    y.append(avg)
+
+x = np.arange(0, N)
+plt.figure()
+plt.plot(x, y)
+plt.show()
+```
+
+--------------------------------
+
+### Demonstrate Outlier Impact on Feerate Estimation in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This code illustrates the significant effect of an outlier on the feerate estimation curve. It intentionally adds a large outlier to the `total_weight` parameter of the `FeerateEstimator`. The subsequent re-calculation and plotting of the `feerate_to_time` function clearly show how a single outlier can notably distort the entire curve, highlighting a challenge in the current approach.
+
+```python
+estimator = FeerateEstimator(total_weight=total_weight + 100**ALPHA, 
+                             inclusion_interval=avg_mass/network_mass_rate)
+
+pred = estimator.calc_estimations()
+x = np.linspace(1, pred.priority_bucket.feerate, 100000)
+y = estimator.feerate_to_time(x)
+plt.figure()
+plt.plot(x, y)
+plt.fill_between(x, estimator.inclusion_interval, y2=y, alpha=0.5)
+plt.scatter(pred.feerates(), pred.times(), zorder=100)
+plt.show()
+pred
+```
+
+--------------------------------
+
+### Interpolate Feerate Function from Two Estimated Points in Python
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet demonstrates how to reverse-engineer the original feerate curve using only two of the estimated points (low and normal buckets). It calculates coefficients `b1` and `b2` to define a function `p(ff)` that approximates the original `feerate_to_time` relationship, then plots this interpolated function and compares it with the actual estimated points.
+
+```python
+x1, x2 = pred.low_bucket.feerate**ALPHA, pred.normal_bucket.feerate**ALPHA
+y1, y2 = pred.low_bucket.estimated_seconds, pred.normal_bucket.estimated_seconds
+b2 = (y1 - y2*x2/x1) / (1 - x1/x2)
+b1 = (y1 - b2) * x1
+def p(ff):
+    return b1/ff**ALPHA + b2
+
+plt.figure()
+plt.plot(x, p(x))
+plt.scatter(pred.feerates(), pred.times(), zorder=100)
+plt.show()
+p(pred.feerates()), pred.times()
+```
+
+--------------------------------
+
+### Calculate Total Mempool Weight
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This code calculates the total probability weight of all transactions in the mempool. It uses the `ALPHA` constant to raise each feerate to a power, effectively weighting higher feerates more significantly, and then sums these weighted values.
+
+```python
+total_weight = sum(np.array(feerates)**ALPHA)
+print('Total mempool weight: ', total_weight)
+```
+
+--------------------------------
+
+### Compounded UtxosChanged Subscription Remove(R) Pseudo-code
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/notify/src/subscription/processing.md
+
+Describes the pseudo-code for processing and returning values when removing a set of addresses 'R' from a compounded UtxosChanged subscription. This outlines the logic for decrementing counters and stopping events.
+
+```pseudo-code
+For each r in R
+   dec counter of r
+   If counter == 0 add r to S
+```
+
+```pseudo-code
+If S is not empty and All == 0
+   Some(SubscribeMessage::StopEvent(NotificationType::UtxosChanged(S)))
+Else
+   None
+```
+
+--------------------------------
+
+### Calculate Transaction Inclusion Interval
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This code calculates the estimated inclusion interval for transactions. It represents the amortized time between transactions, derived from the average transaction mass and the network's total mass processing rate.
+
+```python
+print('Inclusion interval: ', avg_mass/network_mass_rate)
+```
+
+--------------------------------
+
+### Define Alpha Parameter for Feerate Weighting
+
+Source: https://github.com/kaspanet/rusty-kaspa/blob/master/mining/src/feerate/fee_estimation.ipynb
+
+This snippet defines the `ALPHA` constant, which is used as an exponent to bias the probability weight towards higher feerate transactions. A higher alpha value increases the preference for transactions with greater feerates.
+
+```python
+ALPHA = 3.0
+```
+
+=== COMPLETE CONTENT === This response contains all available snippets from this library. No additional content exists. Do not make further requests.

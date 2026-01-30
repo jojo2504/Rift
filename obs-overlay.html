@@ -66,9 +66,48 @@
             width: 100px;
             height: 100px;
         }
+
+        /* Donation alert animation */
+        #donation-alert {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 2em;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        #donation-alert.show {
+            animation: donationPop 2s ease-out;
+        }
+
+        @keyframes donationPop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            10% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            90% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+
+        @keyframes flash {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(255, 215, 0, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .goal-reached {
+            animation: flash 1s 3;
+        }
     </style>
 </head>
 <body>
+    <div id="donation-alert">+<span id="donation-amount">0</span> KAS</div>
 
     <div id="challenge-container">
         <h1 id="challenge-title">Manger un piment rouge</h1>
@@ -90,34 +129,66 @@
         const progressText = document.getElementById('progress-text');
         const challengeTitle = document.getElementById('challenge-title');
         const body = document.body;
+        const donationAlert = document.getElementById('donation-alert');
+        const donationAmountSpan = document.getElementById('donation-amount');
+        const qrCodeImg = document.getElementById('qr-code');
 
         // Get challenge ID from URL, default to 'piment'
         const urlParams = new URLSearchParams(window.location.search);
         const DEFI_ID = urlParams.get('defi') || 'piment';
 
+        let lastKnownAmount = 0;
+
+        // Load QR code for donation page
+        async function loadQRCode() {
+            try {
+                const response = await fetch(`/api/qrcode/${DEFI_ID}`);
+                const data = await response.json();
+                if (data.qrCode) {
+                    qrCodeImg.src = data.qrCode;
+                    qrCodeImg.alt = `Scan to donate - ${data.url}`;
+                }
+            } catch (error) {
+                console.error('Failed to load QR code:', error);
+            }
+        }
+
         function setChallengeLook(challenge) {
             challengeTitle.textContent = challenge.title;
+            lastKnownAmount = challenge.currentAmount;
             updateProgress(challenge.currentAmount, challenge.goal);
         }
 
-        function updateProgress(amount, goal) {
-            let currentAmount = amount;
-            const percentage = (currentAmount / goal) * 100;
+        function updateProgress(amount, goal, showAlert = false) {
+            const donationAmount = amount - lastKnownAmount;
+            
+            if (showAlert && donationAmount > 0) {
+                showDonationAlert(donationAmount);
+            }
+            
+            lastKnownAmount = amount;
+            const percentage = (amount / goal) * 100;
             
             progressBar.style.width = Math.min(percentage, 100) + '%';
-            progressText.textContent = `${currentAmount.toFixed(2)} KAS / ${goal} KAS`;
+            progressText.textContent = `${amount.toFixed(2)} KAS / ${goal} KAS`;
+        }
+
+        function showDonationAlert(amount) {
+            donationAmountSpan.textContent = amount.toFixed(2);
+            donationAlert.classList.add('show');
+            setTimeout(() => {
+                donationAlert.classList.remove('show');
+            }, 2000);
         }
 
         function handleGoalReached() {
             console.log('GOAL REACHED!');
-            // Add a visual effect, for example a flash animation
-            body.style.animation = 'flash 1s 3';
-            setTimeout(() => body.style.animation = '', 3000);
+            body.classList.add('goal-reached');
+            setTimeout(() => body.classList.remove('goal-reached'), 3000);
         }
 
         function connect() {
             const socket = new WebSocket('ws://localhost:8080');
-
             socket.onopen = function() {
                 console.log(`Connected to WebSocket server. Watching for challenge: ${DEFI_ID}`);
             };
@@ -156,18 +227,8 @@
             };
         }
 
-        // Add a simple flashing animation for goal completion
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes flash {
-                0% { background-color: transparent; }
-                50% { background-color: #FFD700; } /* Gold flash */
-                100% { background-color: transparent; }
-            }
-        `;
-        document.head.appendChild(style);
-
-
+        // Initialize
+        loadQRCode();
         connect();
     </script>
 
