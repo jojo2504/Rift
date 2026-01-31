@@ -1,5 +1,10 @@
 import StaggeredMenu from './StaggeredMenu';
-import riftLogo from './assets/rift.png';
+import riftLogo from './assets/rift_logo.png';
+import twitchLogo from './assets/twitch-blacklogo.svg';
+import kickLogo from './assets/kickstarter-kick-starter-crowdfunding-svgrepo-com.svg';
+import youtubeLogo from './assets/youtube-168-svgrepo-com.svg';
+import onlyfansLogo from './assets/onlyfans-2.svg';
+import discordLogo from './assets/discord-svgrepo-com.svg';
 import Ballpit from './Ballpit';
 import RotatingText from './RotatingText';
 
@@ -12,10 +17,10 @@ const App = () => {
   };
 
   const menuItems = [
-    { label: 'Home', ariaLabel: 'Go to home page', link: '#' },
-    { label: 'Features', ariaLabel: 'View features', link: '#features' },
+    { label: 'Home', ariaLabel: 'Go to home page', link: '#home' },
     { label: 'How It Works', ariaLabel: 'Learn how it works', link: '#how-it-works' },
-    { label: 'Download', ariaLabel: 'Download Rift', link: '#download' }
+    { label: 'Demo', ariaLabel: 'View demo', link: '#demo' },
+    { label: 'Early Access', ariaLabel: 'Join early access', link: '#download' }
   ];
 
   const socialItems = [
@@ -38,7 +43,7 @@ const App = () => {
       padding: '0 clamp(15px, 4vw, 20px)',
     },
     hero: {
-      padding: 'clamp(80px, 10vh, 120px) 0',
+      padding: 'clamp(80px, 10vh, 120px) 0 clamp(40px, 5vh, 60px) 0',
       background: 'linear-gradient(135deg, #FFFFFF 0%, #F4FBF8 100%)',
       position: 'relative',
       minHeight: '100vh',
@@ -117,22 +122,36 @@ const App = () => {
       color: '#6B7280',
       fontWeight: '500',
     },
-    platformsRow: {
+    compatibleWith: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '20px',
+      marginTop: '40px',
+      width: '100%',
+    },
+    compatibleLabel: {
+      fontSize: '12px',
+      color: '#9CA3AF',
+      fontWeight: '500',
+      letterSpacing: '1px',
+      textTransform: 'uppercase',
+    },
+    platformLogos: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '15px',
-      fontSize: '15px',
-      color: '#6B7280',
-      fontWeight: '500',
+      gap: 'clamp(30px, 6vw, 50px)',
+      flexWrap: 'wrap',
+      maxWidth: '600px',
     },
-    platformIcon: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '6px',
-    },
-    separator: {
-      color: '#cccccc',
+    platformLogo: {
+      height: '28px',
+      width: 'auto',
+      opacity: 0.6,
+      transition: 'opacity 0.3s ease',
+      filter: 'grayscale(100%) brightness(0.7)',
+      cursor: 'default',
     },
     heroFooter: {
       fontSize: '14px',
@@ -186,6 +205,52 @@ const App = () => {
       padding: 'clamp(60px, 10vh, 100px) 0',
       minHeight: '60vh',
     },
+    howItWorksSection: {
+      padding: 'clamp(80px, 12vh, 120px) 0',
+      backgroundColor: '#FFFFFF',
+      minHeight: 'auto',
+    },
+    howItWorksContent: {
+      maxWidth: '1100px',
+      margin: '0 auto',
+      padding: '0 clamp(20px, 5vw, 40px)',
+    },
+    stepsContainer: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+      gap: 'clamp(40px, 6vw, 60px)',
+      marginTop: 'clamp(50px, 8vh, 70px)',
+    },
+    stepCard: {
+      textAlign: 'center',
+      padding: '0 clamp(15px, 3vw, 20px)',
+    },
+    stepNumber: {
+      width: 'clamp(50px, 10vw, 60px)',
+      height: 'clamp(50px, 10vw, 60px)',
+      borderRadius: '50%',
+      backgroundColor: '#F4FBF8',
+      color: '#12B886',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 'clamp(20px, 4vw, 24px)',
+      fontWeight: '700',
+      margin: '0 auto clamp(20px, 4vh, 30px)',
+      border: '2px solid #12B886',
+    },
+    stepTitle: {
+      fontSize: 'clamp(18px, 4vw, 22px)',
+      fontWeight: '700',
+      color: '#0B0B0B',
+      marginBottom: 'clamp(12px, 2.5vh, 16px)',
+    },
+    stepDescription: {
+      fontSize: 'clamp(14px, 3vw, 16px)',
+      color: '#6B7280',
+      lineHeight: '1.6',
+      fontWeight: '400',
+    },
     sectionTitle: {
       textAlign: 'center',
       fontSize: 'clamp(28px, 6vw, 38px)',
@@ -194,20 +259,22 @@ const App = () => {
       fontWeight: '700',
     },
     liveSection: {
-      padding: 'clamp(80px, 12vh, 140px) 0',
-      backgroundColor: '#FFFFFF',
-      minHeight: '80vh',
+      padding: 'clamp(50px, 6vh, 80px) 0 clamp(120px, 15vh, 180px) 0',
+      background: 'linear-gradient(180deg, #F4FBF8 0%, #FFFFFF 40%, #FFFFFF 100%)',
+      minHeight: 'auto',
     },
     liveSectionContent: {
-      maxWidth: '900px',
+      maxWidth: '1000px',
       margin: '0 auto',
       textAlign: 'center',
+      padding: '0 clamp(20px, 5vw, 40px)',
     },
     obsMockup: {
       backgroundColor: '#0B0B0B',
       borderRadius: '20px',
       padding: 'clamp(20px, 5vw, 40px)',
-      marginBottom: 'clamp(30px, 6vw, 50px)',
+      marginTop: 'clamp(40px, 6vh, 60px)',
+      marginBottom: 'clamp(50px, 8vh, 80px)',
       position: 'relative',
       boxShadow: '0 20px 60px rgba(11, 11, 11, 0.15)',
     },
@@ -269,7 +336,7 @@ const App = () => {
     liveMainText: {
       fontSize: 'clamp(16px, 4vw, 22px)',
       color: '#0B0B0B',
-      marginBottom: '40px',
+      marginBottom: 'clamp(35px, 5vh, 50px)',
       fontWeight: '500',
       lineHeight: '1.5',
       padding: '0 20px',
@@ -278,7 +345,7 @@ const App = () => {
       display: 'flex',
       flexDirection: 'column',
       gap: '15px',
-      marginBottom: '50px',
+      marginBottom: 'clamp(40px, 6vh, 60px)',
       padding: '0 20px',
     },
     liveBullet: {
@@ -321,34 +388,36 @@ const App = () => {
       marginBottom: '20px',
     },
     footer: {
-      padding: 'clamp(30px, 6vw, 50px) 0',
-      borderTop: '1px solid #e5e7eb',
-      marginTop: 'clamp(40px, 10vw, 80px)',
-      backgroundColor: '#F9FAFB',
+      padding: 'clamp(50px, 8vh, 70px) 0',
+      borderTop: '1px solid #E5E7EB',
+      marginTop: 0,
+      backgroundColor: '#FFFFFF',
     },
     footerContent: {
       display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
-      flexWrap: 'wrap',
-      gap: '20px',
+      flexDirection: 'column',
+      gap: 'clamp(20px, 4vh, 30px)',
+      textAlign: 'center',
     },
     footerCopyright: {
-      fontSize: '14px',
-      color: '#6B7280',
+      fontSize: 'clamp(13px, 2.8vw, 14px)',
+      color: '#9CA3AF',
       margin: 0,
+      fontWeight: '400',
     },
     footerSocials: {
       display: 'flex',
-      gap: '30px',
+      gap: 'clamp(25px, 5vw, 40px)',
       alignItems: 'center',
     },
     footerLink: {
-      fontSize: '14px',
+      fontSize: 'clamp(13px, 2.8vw, 14px)',
       color: '#6B7280',
       textDecoration: 'none',
       fontWeight: '500',
-      transition: 'color 0.2s ease',
+      transition: 'color 0.3s ease',
     },
   };
 
@@ -363,7 +432,7 @@ const App = () => {
         menuButtonColor="#1a1a1a"
         openMenuButtonColor="#1a1a1a"
         changeMenuColorOnOpen={true}
-        colors={['#B19EEF', '#5227FF']}
+        colors={['#7EDCC5', '#12B886']}
         logoUrl={riftLogo}
         accentColor="#12B886"
         isFixed={true}
@@ -371,7 +440,7 @@ const App = () => {
         onMenuClose={() => console.log('Menu closed')}
       />
 
-      <section style={styles.hero}>
+      <section id="home" style={styles.hero}>
         <div style={styles.ballpitContainer}>
           <Ballpit
             count={85}
@@ -438,14 +507,45 @@ const App = () => {
               Free • Setup in 2 minutes
             </p>
             
-            <div style={styles.platformsRow}>
-              <span style={styles.platformIcon}>Twitch</span>
-              <span style={styles.separator}>•</span>
-              <span style={styles.platformIcon}>Kick</span>
-              <span style={styles.separator}>•</span>
-              <span style={styles.platformIcon}>YouTube</span>
-              <span style={styles.separator}>•</span>
-              <span style={styles.platformIcon}>Discord</span>
+            <div style={styles.compatibleWith}>
+              <span style={styles.compatibleLabel}>Compatible with</span>
+              <div style={styles.platformLogos}>
+                <img 
+                  src={twitchLogo} 
+                  alt="Twitch" 
+                  style={styles.platformLogo} 
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} 
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                />
+                <img 
+                  src={kickLogo} 
+                  alt="Kick" 
+                  style={styles.platformLogo} 
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} 
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                />
+                <img 
+                  src={youtubeLogo} 
+                  alt="YouTube" 
+                  style={styles.platformLogo} 
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} 
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                />
+                <img 
+                  src={onlyfansLogo} 
+                  alt="OnlyFans" 
+                  style={styles.platformLogo} 
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} 
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                />
+                <img 
+                  src={discordLogo} 
+                  alt="Discord" 
+                  style={styles.platformLogo} 
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} 
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                />
+              </div>
             </div>
             
             <p style={styles.heroFooter}>
@@ -455,7 +555,41 @@ const App = () => {
         </div>
       </section>
 
-      <section style={styles.liveSection}>
+      <section id="how-it-works" style={styles.howItWorksSection}>
+        <div style={styles.container}>
+          <div style={styles.howItWorksContent}>
+            <h2 style={styles.sectionTitle}>How It Works</h2>
+            
+            <div style={styles.stepsContainer}>
+              <div style={styles.stepCard}>
+                <div style={styles.stepNumber}>1</div>
+                <h3 style={styles.stepTitle}>Add to OBS</h3>
+                <p style={styles.stepDescription}>
+                  Paste the overlay URL into OBS as a browser source. No plugins required.
+                </p>
+              </div>
+              
+              <div style={styles.stepCard}>
+                <div style={styles.stepNumber}>2</div>
+                <h3 style={styles.stepTitle}>Set Challenge</h3>
+                <p style={styles.stepDescription}>
+                  Configure your challenge goal and funding target via the dashboard.
+                </p>
+              </div>
+              
+              <div style={styles.stepCard}>
+                <div style={styles.stepNumber}>3</div>
+                <h3 style={styles.stepTitle}>Go Live</h3>
+                <p style={styles.stepDescription}>
+                  Your chat funds the goal. The overlay updates in real-time. You complete the challenge.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" style={styles.liveSection}>
         <div style={styles.container}>
           <div style={styles.liveSectionContent}>
             <h2 style={styles.sectionTitle}>See It Happen Live</h2>
@@ -496,17 +630,17 @@ const App = () => {
 
       <section id="download" style={styles.section}>
         <div style={styles.container}>
-          <h2 style={styles.sectionTitle}>Ready to Transform Your Streams?</h2>
-          <div style={{textAlign: 'center'}}>
-            <p style={{fontSize: '20px', marginBottom: '20px', fontWeight: '600', color: '#0a0a0a'}}>
-              Join creators who are multiplying their revenue while creating more engaging content.
+          <div style={{maxWidth: '700px', margin: '0 auto', textAlign: 'center'}}>
+            <h2 style={styles.sectionTitle}>Add Live Challenges to OBS</h2>
+            <p style={{fontSize: 'clamp(17px, 3.5vw, 20px)', marginBottom: 'clamp(35px, 6vh, 50px)', fontWeight: '500', color: '#6B7280', lineHeight: '1.6', padding: '0 20px'}}>
+              A browser source overlay that connects your stream to community-funded challenge goals.
             </p>
-            <p style={{fontSize: '16px', marginBottom: '40px', color: '#666'}}>
-              Free Installation • OBS & Twitch Compatible • Instant Payouts
-            </p>
-            <button style={{...styles.btn, ...styles.btnPrimary, padding: '20px 40px', fontSize: '20px'}} onClick={() => alert('Download coming soon!')}>
-              Download Rift (Coming Soon)
+            <button style={{...styles.btn, ...styles.btnPrimary, padding: 'clamp(16px, 3.5vw, 20px) clamp(35px, 7vw, 45px)', fontSize: 'clamp(16px, 3.5vw, 20px)'}} onClick={() => alert('Early access registration coming soon!')}>
+              Join Early Access
             </button>
+            <p style={{fontSize: 'clamp(13px, 2.8vw, 15px)', marginTop: 'clamp(18px, 4vw, 24px)', color: '#9CA3AF', fontWeight: '400'}}>
+              Free to use • Works with OBS Studio • Setup in minutes
+            </p>
           </div>
         </div>
       </section>
@@ -514,16 +648,29 @@ const App = () => {
       <footer style={styles.footer}>
         <div style={styles.container}>
           <div style={styles.footerContent}>
-            <p style={styles.footerCopyright}>© 2026 Rift. All rights reserved.</p>
-            
             <div style={styles.footerSocials}>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={styles.footerLink}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#12B886'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}
+              >
                 Twitter
               </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" style={styles.footerLink}>
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={styles.footerLink}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#12B886'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}
+              >
                 GitHub
               </a>
             </div>
+            <p style={styles.footerCopyright}>© 2026 Rift</p>
           </div>
         </div>
       </footer>
