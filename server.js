@@ -5,6 +5,7 @@ const { WebSocketServer } = require('ws');
 const tmi = require('tmi.js');
 const QRCode = require('qrcode');
 const https = require('https');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
@@ -60,6 +61,7 @@ const challenges = {
 };
 
 // --- Middleware ---
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.static('.')); // Serve static files
 
@@ -71,6 +73,21 @@ function broadcast(data) {
             client.send(payload);
         }
     });
+}
+
+// Broadcast challenge update to all clients
+function broadcastChallengeUpdate(defiId) {
+    const challenge = challenges[defiId];
+    if (challenge) {
+        broadcast({
+            type: 'challenge_update',
+            defiId: defiId,
+            currentAmount: challenge.currentAmount,
+            donations: challenge.donations,
+            status: challenge.status,
+            deadline: challenge.deadline
+        });
+    }
 }
 
 wss.on('connection', function connection(ws) {
@@ -179,18 +196,42 @@ app.post('/api/donate/:defiId', async (req, res) => {
     let { txId, donorAddress, txData, intendedAmount } = req.body;
 
     if (!challenges[defiId]) return res.status(404).json({ error: 'Challenge not found' });
-    if (!txId) return res.status(400).json({ error: 'Transaction ID required' });
     if (!donorAddress) return res.status(400).json({ error: 'Donor address required' });
     
     const challenge = challenges[defiId];
     
     try {
+        console.log('=== DONATION REQUEST DEBUG ===');
+        console.log('txId type:', typeof txId);
+        console.log('txId value:', JSON.stringify(txId).substring(0, 100));
+        console.log('txData type:', typeof txData);
+        
+        // Handle case where txId is a JSON-stringified transaction object
+        if (typeof txId === 'string' && txId.startsWith('{')) {
+            try {
+                txId = JSON.parse(txId);
+                console.log('✓ Parsed txId from JSON string to object');
+            } catch (e) {
+                console.log('✗ txId looks like JSON but failed to parse');
+            }
+        }
+
+        // Handle case where txId might be a full transaction object
+        if (typeof txId === 'object' && txId !== null && txId.id) {
+            console.log('✓ Detected: txId is a transaction object, extracting...');
+            txData = txId; // The full transaction is in txId
+            txId = txId.id; // Extract the actual ID
+            console.log('✓ Extracted txId:', txId);
+        }
+        
+        if (!txId) return res.status(400).json({ error: 'Transaction ID required' });
+        
         console.log(`Verifying transaction ${txId} against blockchain...`);
         
         // IMPORTANT: Always verify transaction on blockchain FIRST before checking local storage
         // This prevents replay attacks and ensures transaction validity
         console.log('Received txData type:', typeof txData);
-        console.log('Received txData:', txData);
+        console.log('Received txData:', txData ? 'present' : 'undefined');
         
         // If txData is just a string (transaction ID), it needs to be parsed
         if (typeof txData === 'string') {
@@ -220,179 +261,105 @@ app.post('/api/donate/:defiId', async (req, res) => {
             transactionData = txData;
             verificationMethod = 'wallet_data';
         }
-        // Check if wallet provided transaction in a different format (some wallets nest it)
         else if (txData && txData.transaction && txData.transaction.outputs) {
             console.log('✓ Using nested transaction data from wallet');
             transactionData = txData.transaction;
             verificationMethod = 'wallet_data_nested';
         }
-        // Check if it's a complete transaction with inputs/outputs but no direct outputs property
-        else if (txData && txData.verboseData && txData.verboseData.outputs) {
-            console.log('✓ Using verboseData transaction format');
-            transactionData = txData.verboseData;
-            verificationMethod = 'wallet_data_verbose';
-        }
-        // For testnet, if we have the expected amount from the wallet, accept it
-        // (blockchain APIs often don't support testnet-10)
-        else if (NETWORK.includes('testnet') && txData && typeof txData === 'object') {
-            console.log('⚠️  TESTNET MODE: Wallet data doesn\'t have expected outputs structure');
-            console.log('Trying to extract amount from wallet response...');
-            
-            // Try to extract amount from various wallet response formats
-            if (txData.amount) {
-                amount = parseFloat(txData.amount);
-                console.log(`Found amount in txData.amount: ${amount}`);
-            } else if (txData.value) {
-                amount = parseFloat(txData.value) / 100000000; // Convert sompi to KAS
-                console.log(`Found value in txData.value: ${amount}`);
-            } else if (txData.totalAmount) {
-                amount = parseFloat(txData.totalAmount);
-                console.log(`Found amount in txData.totalAmount: ${amount}`);
-            }
-            
-            if (amount && amount > 0) {
-                console.log(`✓ Testnet transaction accepted from wallet data: ${amount} KAS`);
-                verificationMethod = 'testnet_trust';
-            } else {
-                console.log('⚠️  No amount info in wallet data. Will try blockchain API or use intended amount...');
-                verificationMethod = 'testnet_user_report';
-            }
-        }
-        // Otherwise, fetch from blockchain using RPC
+        // If no txData provided, fetch from blockchain API
         else {
-            console.log(`Fetching transaction from Kaspa RPC: ${NETWORK_RPC}`);
-            
+            console.log('No txData from wallet - fetching from blockchain API...');
             try {
-                // Use kaspajs to connect to RPC and fetch transaction
-                const kaspa = require('kaspajs');
+                // Use Kaspa API to fetch transaction details
+                const apiUrl = `https://api.kaspa.org/transactions/${txId}`;
+                console.log(`Fetching from: ${apiUrl}`);
                 
-                // Try to get transaction from RPC
-                let rpcClient;
-                try {
-                    // Create RPC client connection
-                    console.log(`  Connecting to ${NETWORK} RPC...`);
-                    rpcClient = new kaspa.RpcClient({
-                        url: NETWORK_RPC,
-                        encoding: kaspa.Encoding.Borsh,
-                        networkId: NETWORK
-                    });
-                    
-                    await rpcClient.connect();
-                    console.log('  ✓ Connected to RPC');
-                    
-                    // Get transaction from blockchain
-                    console.log(`  Fetching transaction ${txId}...`);
-                    const txResponse = await rpcClient.getTransaction(txId, true); // includeOrphanPool = true
-                    
-                    if (txResponse && txResponse.transaction) {
-                        transactionData = txResponse.transaction;
-                        console.log('  ✓ Transaction found on blockchain via RPC');
-                        verificationMethod = 'rpc_blockchain';
-                    } else {
-                        throw new Error('Transaction not found on blockchain');
-                    }
-                    
-                    await rpcClient.disconnect();
-                } catch (rpcError) {
-                    if (rpcClient) {
-                        try { await rpcClient.disconnect(); } catch (e) { /* ignore */ }
-                    }
-                    throw rpcError;
+                const response = await new Promise((resolve, reject) => {
+                    https.get(apiUrl, (resp) => {
+                        let data = '';
+                        resp.on('data', (chunk) => { data += chunk; });
+                        resp.on('end', () => {
+                            try {
+                                resolve(JSON.parse(data));
+                            } catch (e) {
+                                reject(new Error('Invalid JSON response from API'));
+                            }
+                        });
+                    }).on('error', reject);
+                });
+                
+                if (response && response.outputs) {
+                    transactionData = response;
+                    verificationMethod = 'blockchain_api';
+                    console.log('✓ Retrieved transaction from blockchain API');
+                } else {
+                    throw new Error('Transaction not found or has no outputs');
                 }
-            } catch (rpcError) {
-                console.error(`  ✗ RPC verification failed:`, rpcError.message);
-                
-                // If RPC fails, reject the transaction for security
-                return res.status(400).json({ 
+            } catch (apiError) {
+                console.error(`✗ Blockchain API fetch failed:`, apiError.message);
+                return res.status(400).json({
                     error: 'Cannot verify transaction on blockchain',
                     txId,
-                    details: rpcError.message,
-                    rpcEndpoint: NETWORK_RPC,
-                    network: NETWORK,
-                    suggestion: 'Please ensure your transaction is confirmed on the blockchain and try again'
+                    details: apiError.message,
+                    suggestion: 'Transaction may not be confirmed yet. Please wait a few seconds and try again.'
                 });
             }
         }
         
         console.log('Verification method:', verificationMethod);
         
-        // Extract amount based on verification method
+        // Verify transaction has outputs
+        if (!Array.isArray(transactionData.outputs) || transactionData.outputs.length === 0) {
+            return res.status(400).json({ 
+                error: 'Invalid transaction - no outputs',
+                details: 'Transaction data structure is invalid. Expected outputs array.',
+                receivedStructure: Object.keys(transactionData || {})
+            });
+        }
+        
+        console.log('Transaction data received:', JSON.stringify(transactionData).substring(0, 300) + '...');
+        
+        // Find output to vault address and get the actual amount sent
+        let foundVaultOutput = false;
         let actualAmountSompi = 0;
         
-        if (verificationMethod === 'testnet_trust' && amount) {
-            // Amount already extracted from wallet data
-            console.log(`✓ Using amount from wallet data: ${amount} KAS`);
-        } else if (verificationMethod === 'rpc_blockchain' || (transactionData && transactionData.outputs)) {
-            // Verify transaction has outputs
-            if (!Array.isArray(transactionData.outputs) || transactionData.outputs.length === 0) {
-                return res.status(400).json({ 
-                    error: 'Invalid transaction - no outputs',
-                    details: 'Transaction data structure is invalid. Expected outputs array.',
-                    receivedStructure: Object.keys(transactionData || {})
-                });
-            }
+        for (const output of transactionData.outputs) {
+            const outputValue = output.value || output.amount;
+            let isVaultOutput = false;
             
-            console.log('Transaction data received:', JSON.stringify(transactionData).substring(0, 300) + '...');
-            
-            // Find output to vault address and get the actual amount sent
-            let foundVaultOutput = false;
-            
-            // For RPC responses, need to handle scriptPublicKey format
-            // Convert vault address to check against outputs
-            const kaspa = require('kaspajs');
-            
-            for (const output of transactionData.outputs) {
-                const outputValue = output.value || output.amount;
-                let isVaultOutput = false;
+            // Check if output goes to our vault address
+            if (output.scriptPublicKey) {
+                const outputScript = output.scriptPublicKey;
                 
-                // Check multiple ways to match vault address
-                if (output.scriptPublicKey) {
-                    const outputScript = output.scriptPublicKey;
-                    
-                    // For testnet: kaspatest:qzfdvw6mvzwkzr2rfrq268ut0a90gm6pxe6enxj3j25kp97t4jvz7pxyxt0vl
-                    // corresponds to scriptPublicKey: 00002092d63b5b609d610d4348c0ad1f8b7f4af46f413675999a5192a96097cbac982fac
-                    if (outputScript === '00002092d63b5b609d610d4348c0ad1f8b7f4af46f413675999a5192a96097cbac982fac') {
-                        isVaultOutput = true;
-                    }
-                    
-                    // Also try to decode the address from script if available
-                    try {
-                        const address = kaspa.Address.fromScriptPublicKey(outputScript, NETWORK);
-                        if (address && address.toString() === VAULT_ADDRESS) {
-                            isVaultOutput = true;
-                        }
-                    } catch (e) {
-                        // Ignore decoding errors
-                    }
-                }
-                
-                // Check if output has verboseData with address
-                if (output.verboseData && output.verboseData.scriptPublicKeyAddress === VAULT_ADDRESS) {
+                // For testnet vault: kaspatest:qzfdvw6mvzwkzr2rfrq268ut0a90gm6pxe6enxj3j25kp97t4jvz7pxyxt0vl
+                // corresponds to scriptPublicKey: 00002092d63b5b609d610d4348c0ad1f8b7f4af46f413675999a5192a96097cbac982fac
+                if (outputScript === '00002092d63b5b609d610d4348c0ad1f8b7f4af46f413675999a5192a96097cbac982fac') {
                     isVaultOutput = true;
-                }
-                
-                if (isVaultOutput) {
-                    actualAmountSompi += parseInt(outputValue);
-                    foundVaultOutput = true;
-                    console.log(`  ✓ Found vault output: ${outputValue} sompi`);
+                    console.log(`  ✓ Found vault output via scriptPublicKey match`);
                 }
             }
             
-            if (!foundVaultOutput) {
-                return res.status(400).json({ 
-                    error: 'Transaction does not send funds to vault address',
-                    expected: VAULT_ADDRESS,
-                    foundOutputs: transactionData.outputs.map(o => ({
-                        scriptPublicKey: o.scriptPublicKey,
-                        verboseData: o.verboseData,
-                        value: o.value || o.amount
-                    }))
-                });
+            if (isVaultOutput) {
+                actualAmountSompi += parseInt(outputValue);
+                foundVaultOutput = true;
+                console.log(`  ✓ Found vault output: ${outputValue} sompi`);
             }
-            
-            // Convert sompi to KAS (1 KAS = 100,000,000 sompi)
-            amount = actualAmountSompi / 100000000;
         }
+        
+        if (!foundVaultOutput) {
+            return res.status(400).json({ 
+                error: 'Transaction does not send funds to vault address',
+                expected: VAULT_ADDRESS,
+                expectedScriptPubKey: '00002092d63b5b609d610d4348c0ad1f8b7f4af46f413675999a5192a96097cbac982fac',
+                foundOutputs: transactionData.outputs.map(o => ({
+                    scriptPublicKey: o.scriptPublicKey,
+                    value: o.value || o.amount
+                }))
+            });
+        }
+        
+        // Convert sompi to KAS (1 KAS = 100,000,000 sompi)
+        amount = actualAmountSompi / 100000000;
         
         if (!amount || amount <= 0) {
             return res.status(400).json({ error: 'Invalid donation amount' });
@@ -414,9 +381,6 @@ app.post('/api/donate/:defiId', async (req, res) => {
         }
         
         console.log(`✓ Transaction is new and valid - proceeding with donation processing`);
-        
-        // Rest of donation processing...
-        const challenge = challenges[defiId];
         
         // Check if challenge is expired
         if (Date.now() > challenge.deadline && challenge.status === 'active') {
@@ -453,6 +417,9 @@ app.post('/api/donate/:defiId', async (req, res) => {
         console.log(`Donation for '${defiId}': +${amount} KAS from ${donorAddress} | Total: ${challenge.currentAmount} / ${challenge.goal}`);
         console.log(`  → TX: ${txId}`);
         console.log(`  → Funds held in escrow. ${challenge.donations.length} donations total.`);
+
+        // Broadcast challenge update to all connected clients
+        broadcastChallengeUpdate(defiId);
 
         broadcast({ 
             type: 'update', 

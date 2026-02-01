@@ -4,38 +4,9 @@ import { IoRocketSharp } from 'react-icons/io5';
 import { Challenge, KaspaWalletAPI } from '../types';
 import './DonatePage.css';
 
-// Direct blockchain connection - no backend needed
-const RPC_URL = 'wss://baryon-10.kaspa.green/kaspa/testnet-10/wrpc/borsh';
-const NETWORK = 'testnet-10';
-const VAULT_ADDRESS = 'kaspatest:qzfdvw6mvzwkzr2rfrq268ut0a90gm6pxe6enxj3j25kp97t4jvz7pxyxt0vl';
-
-// Mock challenges data (in production, this would come from blockchain or IPFS)
-const MOCK_CHALLENGES: Record<string, Challenge> = {
-  'piment': {
-    defiId: 'piment',
-    title: "Manger un piment rouge",
-    goal: 1000,
-    currentAmount: 0,
-    status: 'active',
-    deadline: Date.now() + (24 * 60 * 60 * 1000),
-    donations: [],
-    vaultAddress: VAULT_ADDRESS,
-    network: NETWORK,
-    networkRPC: RPC_URL,
-  },
-  'glace': {
-    defiId: 'glace',
-    title: "Bain dans l'eau glacée",
-    goal: 2500,
-    currentAmount: 0,
-    status: 'active',
-    deadline: Date.now() + (48 * 60 * 60 * 1000),
-    donations: [],
-    vaultAddress: VAULT_ADDRESS,
-    network: NETWORK,
-    networkRPC: RPC_URL,
-  }
-};
+// Direct blockchain connection - synced via server
+const SERVER_URL = 'http://localhost:8080';
+const WS_URL = 'ws://localhost:8080';
 
 const DonatePage = () => {
   const [defiId, setDefiId] = useState<string>('');
@@ -46,7 +17,9 @@ const DonatePage = () => {
   // Wallet state
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>('');
+  const [walletAccounts, setWalletAccounts] = useState<string[]>([]);
   const [walletAPI, setWalletAPI] = useState<KaspaWalletAPI | null>(null);
+  const [showAccountSelector, setShowAccountSelector] = useState(false);
   
   // Donation state
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
@@ -69,17 +42,31 @@ const DonatePage = () => {
     setDefiId(id);
   }, []);
 
-  // Load challenge data
+  // Load challenge data from server
   useEffect(() => {
     if (!defiId) return;
 
     const loadChallenge = async () => {
       try {
-        // Load from mock data (in production: fetch from blockchain/IPFS)
-        const data = MOCK_CHALLENGES[defiId];
-        if (!data) throw new Error('Challenge not found');
+        // Fetch from server API
+        const response = await fetch(`${SERVER_URL}/api/challenge/${defiId}`);
+        if (!response.ok) {
+          throw new Error('Challenge not found');
+        }
         
-        setChallenge(data);
+        const data = await response.json();
+        setChallenge({
+          defiId: data.defiId,
+          title: data.title,
+          goal: data.goal,
+          currentAmount: data.currentAmount,
+          status: data.status,
+          deadline: data.deadline,
+          donations: data.donations || [],
+          vaultAddress: data.vaultAddress,
+          network: data.network,
+          networkRPC: data.networkRPC,
+        });
         setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load challenge');
@@ -90,15 +77,49 @@ const DonatePage = () => {
     loadChallenge();
   }, [defiId]);
 
-  // WebSocket for real-time updates (optional - could use local storage)
+  // WebSocket for real-time updates from server
   useEffect(() => {
     if (!defiId) return;
 
-    // For now, just update from local state
-    // In production, you could use a decentralized pub/sub or local storage events
+    const ws = new WebSocket(WS_URL);
+    
+    ws.onopen = () => {
+      console.log('Connected to server WebSocket');
+    };
+    
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'challenge_update' && data.defiId === defiId) {
+          // Update challenge with new data from server
+          setChallenge(prev => prev ? {
+            ...prev,
+            currentAmount: data.currentAmount,
+            donations: data.donations,
+            status: data.status,
+          } : null);
+        } else if (data.type === 'all_challenges' && data.challenges[defiId]) {
+          // Initial data load
+          const challengeData = data.challenges[defiId];
+          setChallenge(prev => prev ? {
+            ...prev,
+            currentAmount: challengeData.currentAmount,
+            donations: challengeData.donations,
+            status: challengeData.status,
+          } : null);
+        }
+      } catch (err) {
+        console.error('WebSocket message error:', err);
+      }
+    };
+    
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
     
     return () => {
-      // cleanup
+      ws.close();
     };
   }, [defiId]);
 
@@ -138,7 +159,9 @@ const DonatePage = () => {
       // Disconnect
       setWalletConnected(false);
       setWalletAddress('');
+      setWalletAccounts([]);
       setWalletAPI(null);
+      setShowAccountSelector(false);
       return;
     }
 
@@ -169,15 +192,26 @@ const DonatePage = () => {
         throw new Error('No accounts found in wallet');
       }
 
+      setWalletAccounts(accounts);
       setWalletAddress(accounts[0]);
       setWalletAPI(api);
       setWalletConnected(true);
       console.log('Wallet connected:', accounts[0]);
+      if (accounts.length > 1) {
+        console.log(`Found ${accounts.length} accounts`);
+      }
 
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to connect wallet';
       showAlert(message, 'error');
     }
+  };
+
+  // Switch wallet account
+  const switchAccount = (account: string) => {
+    setWalletAddress(account);
+    setShowAccountSelector(false);
+    console.log('Switched to account:', account);
   };
 
   // Handle amount selection
@@ -207,17 +241,30 @@ const DonatePage = () => {
       });
 
       let txId: string | null = null;
+      let txData: any = null; // Full transaction object from wallet, if available
 
-      // Send transaction
+      // Send transaction through wallet (wallet will validate balance)
+      // Cast to unknown first: the type says string, but at runtime wallets often
+      // return a full transaction object. unknown lets us narrow safely.
       if (walletAPI.sendKaspa) {
-        const result = await walletAPI.sendKaspa(challenge.vaultAddress, sompiAmount.toString());
-        txId = result;
+        const result: unknown = await walletAPI.sendKaspa(challenge.vaultAddress, sompiAmount.toString());
+        if (typeof result === 'string') {
+          txId = result;
+        } else if (result && typeof result === 'object') {
+          txData = result;
+          txId = (result as Record<string, any>).id || (result as Record<string, any>).txId || null;
+        }
       } else if (walletAPI.sendTransaction) {
-        const result = await walletAPI.sendTransaction({
+        const result: unknown = await walletAPI.sendTransaction({
           to: challenge.vaultAddress,
           amount: sompiAmount.toString(),
         });
-        txId = typeof result === 'string' ? result : result.txId || null;
+        if (typeof result === 'string') {
+          txId = result;
+        } else if (result && typeof result === 'object') {
+          txData = result;
+          txId = (result as Record<string, any>).id || (result as Record<string, any>).txId || null;
+        }
       } else {
         throw new Error('Wallet does not support sending transactions');
       }
@@ -229,24 +276,46 @@ const DonatePage = () => {
       console.log('✅ Transaction sent! TX ID:', txId);
       console.log('Transaction submitted to blockchain:', txId);
 
-      // Update local state immediately
-      setChallenge(prev => prev ? {
-        ...prev,
-        currentAmount: prev.currentAmount + selectedAmount,
-        donations: [
-          ...prev.donations,
-          {
-            amount: selectedAmount,
-            donorAddress: walletAddress,
-            timestamp: Date.now(),
-            txId: txId!,
-          }
-        ]
-      } : null);
+      // Brief delay to let the blockchain index the transaction
+      // (only needed if wallet didn't return full txData, but harmless either way)
+      if (!txData) {
+        console.log('⏳ Waiting for blockchain to index transaction...');
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
 
-      showAlert(
-        `✅ Donation successful! ${selectedAmount.toFixed(2)} KAS sent. TX: ${txId.substring(0, 10)}...`
-      );
+      // Submit to server for verification and state update
+      try {
+        const submitResponse = await fetch(`${SERVER_URL}/api/donate/${defiId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            txId: txId,
+            txData: txData,       // full transaction object for on-chain verification
+            donorAddress: walletAddress,
+            intendedAmount: selectedAmount,
+          }),
+        });
+
+        if (!submitResponse.ok) {
+          const errorData = await submitResponse.json();
+          throw new Error(errorData.error || 'Failed to register donation with server');
+        }
+
+        const result = await submitResponse.json();
+        console.log('Server confirmed donation:', result);
+
+        showAlert(
+          `✅ Donation successful! ${selectedAmount.toFixed(2)} KAS sent. TX: ${txId.substring(0, 10)}...`
+        );
+      } catch (serverErr) {
+        console.error('Server submission error:', serverErr);
+        showAlert(
+          `⚠️ Transaction sent but server registration failed: ${serverErr instanceof Error ? serverErr.message : 'Unknown error'}`,
+          'error'
+        );
+      }
 
       // Reset form
       setSelectedAmount(0);
@@ -348,7 +417,72 @@ const DonatePage = () => {
             )}
           </button>
           {walletAddress && (
-            <div className="wallet-address">{walletAddress}</div>
+            <>
+              <div className="wallet-address">{walletAddress}</div>
+              {walletAccounts.length > 1 && (
+                <div style={{ marginTop: '10px', position: 'relative' }}>
+                  <button
+                    className="btn"
+                    onClick={() => setShowAccountSelector(!showAccountSelector)}
+                    style={{
+                      fontSize: '0.9em',
+                      padding: '8px 16px',
+                      background: '#374151',
+                      border: '1px solid #4b5563'
+                    }}
+                  >
+                    🔄 Switch Account ({walletAccounts.length} available)
+                  </button>
+                  {showAccountSelector && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      right: 0,
+                      marginTop: '8px',
+                      background: '#1f2937',
+                      border: '1px solid #4b5563',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      zIndex: 1000,
+                      maxHeight: '200px',
+                      overflowY: 'auto'
+                    }}>
+                      {walletAccounts.map((account, idx) => (
+                        <div
+                          key={account}
+                          onClick={() => switchAccount(account)}
+                          style={{
+                            padding: '10px',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            background: account === walletAddress ? '#10b981' : 'transparent',
+                            color: 'white',
+                            fontSize: '0.85em',
+                            fontFamily: 'monospace',
+                            marginBottom: '4px',
+                            border: account === walletAddress ? 'none' : '1px solid #374151'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (account !== walletAddress) {
+                              e.currentTarget.style.background = '#374151';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (account !== walletAddress) {
+                              e.currentTarget.style.background = 'transparent';
+                            }
+                          }}
+                        >
+                          {account === walletAddress && '✓ '}
+                          {account.substring(0, 20)}...{account.substring(account.length - 10)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
 
